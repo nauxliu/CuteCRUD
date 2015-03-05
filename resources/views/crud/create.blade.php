@@ -32,29 +32,37 @@
                 @include('layouts.notifications')
 
                 <div class="form-group">
-                    <label for="crud_name">Enter CRUD Name</label>
-                    <input type="text" class="form-control" name="crud_name" id="crud_name" placeholder="Enter CRUD Name">
+                    {!! Form::label('crud_name', 'Enter CRUD Name') !!}
+                    {!! Form::text('crud_name', null,
+                        ['id' => 'crud_name', 'class' => 'form-control', 'placeholder' => 'Enter CRUD Name'])
+                    !!}
                 </div>
 
                 <div class="form-group">
-                    <label for="table_name">Enter Table Name</label>
-                    <input type="text" class="form-control" name="table_name" id="table_name" placeholder="Enter Table Name">
+                    {!! Form::label('table_name', 'Enter Table Name') !!}
+                    {!! Form::text('table_name', null,
+                        ['id' => 'table_name', 'class' => 'form-control', 'placeholder' => 'Enter Table Name'])
+                    !!}
                 </div>
 
                 <div class="form-group">
-                    <label for="needle">Unqiue / Primary Column Name (Will be used for editing and deleting)</label>
-                    <input type="text" class="form-control" name="needle" id="needle" placeholder="Ex : id">
+                    {!! Form::label('needle', 'Unqiue / Primary Column Name (Will be used for editing and deleting)') !!}
+                    {!! Form::text('needle', null,
+                        ['id' => 'needle', 'class' => 'form-control', 'placeholder' => 'Ex : id'])
+                    !!}
                 </div>
 
                 <div class="form-group">
-                    <label for="fontawesome_class">Font Awesome Class</label>
-                    <input type="text" class="form-control" name="fontawesome_class" id="fontawesome_class" placeholder="Ex : fa fa-ellipsis-v">
+                    {!! Form::label('fontawesome_class', 'Font Awesome Class') !!}
+                    {!! Form::text('fontawesome_classe', null,
+                        ['id' => 'fontawesome_class', 'class' => 'form-control', 'placeholder' => 'Ex : fa fa-ellipsis-v'])
+                    !!}
                 </div>
 
                 <div class="form-group">
                     <div class="checkbox">
                         <label>
-                            <input name="creatable" type="checkbox"/>
+                            {!! Form::checkbox('creatable') !!}
                             Should have Create View
                         </label>
                     </div>
@@ -63,7 +71,7 @@
                 <div class="form-group">
                     <div class="checkbox">
                         <label>
-                            <input name="editable" type="checkbox"/>
+                            {!! Form::checkbox('editable') !!}
                             Should have Edit View
                         </label>
                     </div>
@@ -72,7 +80,7 @@
                 <div class="form-group">
                     <div class="checkbox">
                         <label>
-                            <input name="listable" type="checkbox"/>
+                            {!! Form::checkbox('listable') !!}
                             Should have Listing View
                         </label>
                     </div>

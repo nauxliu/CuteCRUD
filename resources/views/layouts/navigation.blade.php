@@ -29,19 +29,19 @@
                     <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                 </a>
             </li>
-            @foreach($cruds as $crud)
+            @foreach(App\Models\Table::all() as $crud)
             <li class="treeview">
                 <a href="#">
                     <i class="{!! $crud->fontawesome_class !!}"></i>
                     <span>{!! $crud->crud_name !!}</span>
                     <i class="fa fa-angle-left pull-right"></i>
                 </a>
-                @if($crud->creatable==1||$crud->editable==1||$crud->listable==1)
+                @if($crud->creatable || $crud->editable || $crud->listable)
                 <ul class="treeview-menu">
-                    @if($crud->creatable==1)
+                    @if($crud->creatable)
                         <li><a href="/table/{!! $crud->table_name !!}/create"><i class="fa fa-angle-double-right"></i> Create</a></li>
                     @endif
-                    @if($crud->listable==1)
+                    @if($crud->listable)
                         <li><a href="/table/{!! $crud->table_name !!}/list"><i class="fa fa-angle-double-right"></i> List</a></li>
                     @endif
                     <li><a href="/table/{!! $crud->table_name !!}/settings"><i class="fa fa-angle-double-right"></i> Settings</a></li>

@@ -1,111 +1,82 @@
 <?php namespace App\Http\Controllers;
 
-use \DB;
-use \Request;
-use \Validator;
-use \Input;
-use \App\Utils;
-use \Session;
+use Session;
+use Request;
+use Validator;
+use App\Utils;
+use App\Models\Table;
 
 class CRUDController extends Controller
 {
 
     public function index()
     {
-        $this->data['rows'] = DB::table("crud_table")->get();
-        return view('index', $this->data);
+        $rows = Table::all();
+        return view('index', compact('rows'));
     }
 
     public function create()
     {
-        return view('crud.create',$this->data);
+        return view('crud.create');
     }
 
     public function edit($id)
     {
-        $this->data['crud'] = DB::table("crud_table")->where('id',$id)->first();
-        return view('crud.edit',$this->data);
+        $crud = Table::find($id);
+        return view('crud.edit', compact('crud'));
     }
 
     public function update($id)
     {
-        $this->data['crud'] = DB::table("crud_table")->where('id',$id)->first();
+        //TODO: use middleware
+        $request_data = Request::all();
+        $request_data['creatable'] = Request::has('creatable');
+        $request_data['editable']  = Request::has('editable');
+        $request_data['listable']  = Request::has('listable');
+        $request_data['slug']      = str_slug(Request::get('table_name'));
 
-        $v = Validator::make(['crud_name' => Input::get('crud_name'),
-                'table_name'=> Input::get('table_name'),
-                'needle'    => Input::get('needle'),
-                'creatable' => Input::has('creatable'),
-                'editable'  => Input::has('editable'),
-                'listable'  => Input::has('listable')],
-            ['crud_name'=>'required','table_name'=>'required','needle'=>'required'
-                , 'creatable'=>'required','editable'=>'required', 'listable'=>'required']);
+        $v = Validator::make($request_data, Table::$update_rules);
 
         if ($v->fails()) {
             Session::flash('error_msg',Utils::buildMessages($v->errors()->all()));
             return redirect("/crud/edit/".$id)->withErrors($v)->withInput();
-        } else {
-
-            if(DB::table('crud_table')->where('table_name',Input::get('table_name'))->where('id','!=',$id)->count()>0){
-                Session::flash('error_msg','Table name already exist');
-                return redirect("/crud/edit/".$id)->withInput();
-            }
-
-            DB::table('crud_table')->where('id',$id)->update(['crud_name' => Input::get('crud_name'),
-                'table_name'       => Input::get('table_name'),
-                'slug'             => str_slug(Input::get('table_name')),
-                'fontawesome_class'=> Input::get('fontawesome_class','fa fa-ellipsis-v'),
-                'needle'           => Input::get('needle'),
-                'creatable'        => Input::has('creatable'),
-                'editable'         => Input::has('editable'),
-                'listable'         => Input::has('listable'),
-                'created_at'       => Utils::timestamp(),
-                'updated_at'       => Utils::timestamp()]);
         }
 
-        Session::flash('success_msg','CRUD updated successfully');
+        if( 0 != Table::where('table_name', Request::get('table_name'))->where('id','!=',$id)->count()){
+            Session::flash('error_msg','Table name already exist');
+            return redirect("/crud/edit/".$id)->withInput();
+        }
 
-        return redirect("/crud/all");
+        Table::find($id)->update($request_data);
+
+        Session::flash('success_msg','CRUD updated successfully');
+        return redirect('/');
     }
 
     public function store()
     {
-        $v = Validator::make(['crud_name' => Input::get('crud_name'),
-                'table_name' => Input::get('table_name'),
-                'needle'     => Input::get('needle'),
-                'creatable'  => Input::has('creatable'),
-                'editable'   => Input::has('editable'),
-                'listable'   => Input::has('listable')],
-            ['crud_name'=>'required','table_name'=>'required|unique:crud_table,table_name','needle'=>'required'
-                , 'creatable'=>'required','editable'=>'required', 'listable'=>'required']);
+        //TODO: use middleware
+        $request_data = Request::all();
+        $request_data['creatable'] = Request::has('creatable');
+        $request_data['editable']  = Request::has('editable');
+        $request_data['listable']  = Request::has('listable');
+        $request_data['slug']      = str_slug(Request::get('table_name'));
+
+        $v = Validator::make(Request::all(), Table::$rules);
 
         if ($v->fails()) {
-            Session::flash('error_msg',Utils::buildMessages($v->errors()->all()));
-            return redirect("/crud/create")->withErrors($v)->withInput();
-        } else {
-            DB::table('crud_table')->insert(['crud_name' => Input::get('crud_name'),
-                    'table_name'        => Input::get('table_name'),
-                    'slug'              => str_slug(Input::get('table_name')),
-                    'fontawesome_class' => Input::get('fontawesome_class','fa fa-ellipsis-v'),
-                    'needle'            => Input::get('needle'),
-                    'creatable'         => Input::has('creatable'),
-                    'editable'          => Input::has('editable'),
-                    'listable'          => Input::has('listable'),
-                    'created_at'        => Utils::timestamp(),
-                    'updated_at'        => Utils::timestamp()]);
+            Session::flash('error_msg', Utils::buildMessages($v->errors()->all()));
+            return redirect()->back()->withErrors($v)->withInput();
         }
 
+        Table::create($request_data);
         Session::flash('success_msg','CRUD created successfully');
-
-        return redirect("/crud/all");
+        return redirect('/');
     }
 
     public function delete($id){
-        $crud_table = DB::table('crud_table')->where('id',$id)->first();
-
-        DB::table('crud_table_rows')->where('table_name',$crud_table->table_name)->delete();
-
-        DB::table('crud_table')->where('id',$id)->delete();
+        Table::destroy($id);
         Session::flash('success_msg','CRUD deleted successfully');
-        return redirect("/crud/all")->withInput();
+        return redirect('/')->withInput();
     }
 }
