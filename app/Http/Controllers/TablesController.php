@@ -1,13 +1,11 @@
 <?php namespace App\Http\Controllers;
 
 use \DB;
-use \View;
 use \Request;
 use \Validator;
 use \Input;
 use \App\Utils;
 use \Session;
-use \Redirect;
 use \Schema;
 
 class TablesController extends Controller
@@ -86,7 +84,7 @@ class TablesController extends Controller
         $this->data['timepickers'] = $timepickers;
         $this->data['table'] = $this->table;
 
-        return View::make('tables.create', $this->data);
+        return view('tables.create', $this->data);
     }
 
     public function edit($table_name, $needle)
@@ -137,7 +135,7 @@ class TablesController extends Controller
         $this->data['table'] = $this->table;
         $this->data['needle'] = $needle;
 
-        return View::make('tables.edit', $this->data);
+        return view('tables.edit', $this->data);
     }
 
     public function update($table_name, $needle)
@@ -166,14 +164,14 @@ class TablesController extends Controller
 
         if ($v->fails()) {
             Session::flash('error_msg', Utils::buildMessages($v->errors()->all()));
-            return Redirect::to("/table/" . $this->table->table_name . "/list");
+            return redirect("/table/" . $this->table->table_name . "/list");
         }
 
         DB::table($this->table->table_name)->where($this->table->needle, $needle)->update($arr);
 
         Session::flash('success_msg', 'Entry updated successfully');
 
-        return Redirect::to("/table/{$this->table->table_name}/list");
+        return redirect("/table/{$this->table->table_name}/list");
 
     }
 
@@ -216,7 +214,7 @@ class TablesController extends Controller
 
         Session::flash('success_msg', 'Entry created successfully');
 
-        return Redirect::to("/table/{$this->table->table_name}/list");
+        return redirect("/table/{$this->table->table_name}/list");
 
     }
 
@@ -237,7 +235,7 @@ class TablesController extends Controller
         $this->data['table'] = $this->table;
         $this->data['ids'] = $ids;
 
-        return View::make('tables.list', $this->data);
+        return view('tables.list', $this->data);
     }
 
     public function delete($table_name, $needle)
@@ -248,7 +246,7 @@ class TablesController extends Controller
 
         Session::flash('success_msg', 'Entry deleted successfully');
 
-        return Redirect::to("/table/{$this->table->table_name}/list");
+        return redirect("/table/{$this->table->table_name}/list");
     }
 
 }

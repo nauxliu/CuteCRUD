@@ -1,13 +1,11 @@
 <?php namespace App\Http\Controllers;
 
 use \DB;
-use \View;
 use \Request;
 use \Validator;
 use \Input;
 use \App\Utils;
 use \Session;
-use \Redirect;
 use \Schema;
 
 class SettingsController extends Controller
@@ -86,7 +84,7 @@ class SettingsController extends Controller
 
         }
 
-        return View::make('tables.settings', $this->data);
+        return view('tables.settings', $this->data);
     }
 
     public function postSettings()
@@ -174,7 +172,7 @@ class SettingsController extends Controller
 
         Session::flash('success_msg', 'Table metadata has been updated');
 
-        return Redirect::to("/table/{$this->table->table_name}/list");
+        return redirect("/table/{$this->table->table_name}/list");
     }
 
 }

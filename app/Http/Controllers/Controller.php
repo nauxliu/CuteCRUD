@@ -22,7 +22,7 @@ abstract class Controller extends BaseController {
     {
         if ( ! is_null($this->layout))
         {
-            $this->layout = View::make($this->layout);
+            $this->layout = view($this->layout);
         }
     }
 }
