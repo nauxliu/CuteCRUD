@@ -19,7 +19,7 @@
 <!-- Custom Tabs -->
 <div class="nav-tabs-custom">
 <ul class="nav nav-tabs">
-    <li class="active"><a href="#crud_create" data-toggle="tab">Create CRUD from Table</a>
+    <li class="active"><a href="#crud_create" data-toggle="tab">Edit CRUD from Table</a>
     </li>
 </ul>
 <div class="tab-content">

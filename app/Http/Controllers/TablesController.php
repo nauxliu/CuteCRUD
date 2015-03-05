@@ -21,7 +21,6 @@ class TablesController extends Controller
         $this->table   = DB::table('crud_table')->where('table_name', $segments[1])->first();
         $this->settings= DB::table('crud_settings')->first();
 
-        parent::__construct();
     }
 
     public function uploadFeaturedImage($file)
