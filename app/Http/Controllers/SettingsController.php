@@ -1,5 +1,7 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\Table;
+use App\Models\TableRow;
 use \DB;
 use \Request;
 use \Validator;
@@ -25,91 +27,85 @@ class SettingsController extends Controller
 
     public function settings($table)
     {
-
         if (!Schema::hasTable($table)) {
-            $this->data['result']    = 0;
-            $this->data['message']   = 'Specified table not found';
-        } else {
-            $this->data['result']    = 1;
-            $this->data['message']   = '';
-            $this->data['table_name']= $table;
-            $users_columns = Schema::getColumnListing($table);
-
-            if (DB::table("crud_table_rows")->where('table_name', $table)->count() <= 0) {
-                foreach ($users_columns as $column) {
-                    DB::table('crud_table_rows')->insert(
-                        ['table_name' => $table,
-                            'column_name'=> $column,
-                            'type'       => 'text',
-                            'create_rule'=> '',
-                            'edit_rule'  => '',
-                            'creatable'  => true,
-                            'editable'   => true,
-                            'listable'   => true,
-                            'created_at' => Utils::timestamp(),
-                            'updated_at' => Utils::timestamp()
-                        ]);
-                }
-            }
-
-            $columns = DB::table("crud_table_rows")->where('table_name', $table)->get();
-
-            foreach ($columns as $column) {
-
-                if ($column->type == "radio") {
-                    $radios = DB::table("crud_table_pairs")->where("crud_table_id", $column->id)->get();
-                    $column->radios = $radios;
-                }
-
-                if ($column->type == "checkbox") {
-                    $checkboxes = DB::table("crud_table_pairs")->where("crud_table_id", $column->id)->get();
-                    $column->checkboxes = $checkboxes;
-                }
-
-                if ($column->type == "range") {
-                    $range = DB::table("crud_table_pairs")->where("crud_table_id", $column->id)->first();
-                    $column->range_from = $range->key;
-                    $column->range_to = $range->value;
-                }
-
-                if ($column->type == "select") {
-                    $selects = DB::table("crud_table_pairs")->where("crud_table_id", $column->id)->get();
-                    $column->selects = $selects;
-                }
-            }
-
-            $this->data['columns']= $columns;
-            $this->data['table']  = $this->table;
-
+            Session::flash('error_msg', 'Specified table not found');
+            return view('tables.settings', $this->data);
         }
 
-        return view('tables.settings', $this->data);
-    }
+        $columns_count = count(Schema::getColumnListing($table));
 
-    public function postSettings()
-    {
-
-        //delete old columns and populate new ones
-        if (DB::table('crud_table_rows')->where('table_name', $this->table->table_name)->count() > 0) {
-            Utils::removeTableMeta($this->table);
+        if ( $columns_count != TableRow::where('table_name', $table)->count()) {
+            Table::where('table_name', $table)->first()->initialRows();
         }
 
-        $columns = Input::get("columns");
+        $columns = TableRow::where('table_name', $table)->get();
 
         foreach ($columns as $column) {
 
-            $insert_id = DB::table('crud_table_rows')->insertGetId(
-                ['table_name' => $this->table->table_name,
-                    'column_name'=> $column,
-                    'type'       => Input::get($column . "_type"),
-                    'create_rule'=> Input::get($column . "_create_validator"),
-                    'edit_rule'  => Input::get($column . "_edit_validator"),
-                    'creatable'  => Input::get($column . "_creatable"),
-                    'editable'   => Input::get($column . "_editable"),
-                    'listable'   => Input::get($column . "_listable"),
-                    'created_at' => Utils::timestamp(),
-                    'updated_at' => Utils::timestamp()
-                ]);
+            if ($column->type == "radio") {
+                $radios = DB::table("crud_table_pairs")->where("crud_table_id", $column->id)->get();
+                $column->radios = $radios;
+            }
+
+            if ($column->type == "checkbox") {
+                $checkboxes = DB::table("crud_table_pairs")->where("crud_table_id", $column->id)->get();
+                $column->checkboxes = $checkboxes;
+            }
+
+            if ($column->type == "range") {
+                $range = DB::table("crud_table_pairs")->where("crud_table_id", $column->id)->first();
+                $column->range_from = $range->key;
+                $column->range_to = $range->value;
+            }
+
+            if ($column->type == "select") {
+                $selects = DB::table("crud_table_pairs")->where("crud_table_id", $column->id)->get();
+                $column->selects = $selects;
+            }
+        }
+
+        return view('tables.settings', compact('columns', 'table'));
+    }
+
+    public function postSettings($table)
+    {
+        //delete old columns and populate new ones
+//        if (DB::table('crud_table_rows')->where('table_name', $this->table->table_name)->count() > 0) {
+//            Utils::removeTableMeta($this->table);
+//        }
+
+        $columns = Input::get("columns");
+
+
+        foreach ($columns as $column) {
+            //helper function. get request params.
+//            $input = function($key) use ($column){
+//                return Request::get($column. '_' . $key);
+//            };
+
+            dd(Request::all());
+//            TableRow::where('table_name', $table)->first()->update([
+//                'table_name' => $table,
+//                'column_name'=> $column,
+//                'type'       => $input('type'),
+//                'create_rule'=> $input('validator'),
+//                'edit_rule'  => $input('edit_validator'),
+//                'creatable'  => $input('creatable'),
+//                'editable'   => $input('editable'),
+//                'listable'   => $input('listable'),
+//            ]);
+//            $insert_id = DB::table('crud_table_rows')->insertGetId(
+//                ['table_name' => $this->table->table_name,
+//                    'column_name'=> $column,
+//                    'type'       => Input::get($column . "_type"),
+//                    'create_rule'=> Input::get($column . "_create_validator"),
+//                    'edit_rule'  => Input::get($column . "_edit_validator"),
+//                    'creatable'  => Input::get($column . "_creatable"),
+//                    'editable'   => Input::get($column . "_editable"),
+//                    'listable'   => Input::get($column . "_listable"),
+//                    'created_at' => Utils::timestamp(),
+//                    'updated_at' => Utils::timestamp()
+//                ]);
 
             if (Input::get($column . "_type") == "radio") {
 

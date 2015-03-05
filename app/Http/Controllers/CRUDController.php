@@ -35,7 +35,7 @@ class CRUDController extends Controller
         $request_data['listable']  = Request::has('listable');
         $request_data['slug']      = str_slug(Request::get('table_name'));
 
-        $v = Validator::make($request_data, Table::$update_rules);
+        $v = Validator::make($request_data, Table::$edit_rules);
 
         if ($v->fails()) {
             Session::flash('error_msg',Utils::buildMessages($v->errors()->all()));

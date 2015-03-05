@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Support\Facades\Schema;
 
 class Table extends Model implements AuthenticatableContract, CanResetPasswordContract {
 
@@ -22,11 +23,10 @@ class Table extends Model implements AuthenticatableContract, CanResetPasswordCo
      *
      * @var array
      */
-    protected $fillable = ['crud_name', 'table_name', 'slug', 'creatable', 'editable', 'listable',
-        'fontawesome_class', 'needle'];
+    protected $guarded = array([]);
 
     /**
-     * Validator Rules
+     * Create Validation Rules
      *
      * @var array
      */
@@ -36,7 +36,12 @@ class Table extends Model implements AuthenticatableContract, CanResetPasswordCo
         'needle'     => 'required',
     ];
 
-    public static $update_rules = [
+    /**
+     * Edit Validation Rules
+     *
+     * @var array
+     */
+    public static $edit_rules = [
         'crud_name'  => 'required',
         'table_name' => 'required',
         'needle'     => 'required',
@@ -60,6 +65,31 @@ class Table extends Model implements AuthenticatableContract, CanResetPasswordCo
         static::deleted(function($user){
             $user->rows()->delete();
         });
+    }
+
+    /*
+     * Initial Table's rows
+     */
+    public function initialRows()
+    {
+        $table = $this->table_name;
+        $columns = Schema::getColumnListing($table);
+
+        foreach($columns as $column){
+            if(0 != TableRow::where(['column_name' => $column])->count()){
+                continue;
+            }
+            TableRow::create([
+                'table_name' => $table,
+                'column_name'=> $column,
+                'type'       => 'text',
+                'creatable'  => true,
+                'editable'   => true,
+                'listable'   => true,
+            ]);
+        }
+        //Delete unused columns
+        TableRow::whereNotIn('column_name', $columns)->delete;
     }
 
     public function rows()
