@@ -9,7 +9,6 @@ use \Validator;
 use \Input;
 use \App\Utils;
 use \Session;
-use \Schema;
 
 class TablesController extends Controller
 {
@@ -41,181 +40,105 @@ class TablesController extends Controller
         }
     }
 
+    /**
+     * show create page
+     *
+     * @author Xuan
+     * @param $table
+     * @return \Illuminate\View\View
+     */
     public function create($table)
     {
-
-        $datetimepickers = [];
-        $timepickers = [];
-        $columns = TableRow::where('table_name', $table)->get();
-
-
-
-        foreach ($columns as $column) {
-
-            if ($column->type == "datetime") {
-                $datetimepickers[] = $column->column_name;
-            }
-
-            if ($column->type == "time") {
-                $timepickers[] = $column->column_name;
-            }
-
-            if ($column->type == "radio") {
-                $radios = DB::table("crud_table_pairs")->where("crud_table_id", $column->id)->get();
-                $column->radios = $radios;
-            }
-
-            if ($column->type == "checkbox") {
-                $checkboxes = DB::table("crud_table_pairs")->where("crud_table_id", $column->id)->get();
-                $column->checkboxes = $checkboxes;
-            }
-
-            if ($column->type == "range") {
-                $range = DB::table("crud_table_pairs")->where("crud_table_id", $column->id)->first();
-                $column->range_from = $range->key;
-                $column->range_to = $range->value;
-            }
-
-            if ($column->type == "select") {
-                $selects = DB::table("crud_table_pairs")->where("crud_table_id", $column->id)->get();
-                $column->selects = $selects;
-            }
-        }
-        return view('tables.create', compact('columns', 'datetimepickers', 'timepickers', 'table'));
+        $columns = TableRow::where('table_name', $table)->where('creatable', 1)->get();
+        $cols = [];
+        return view('tables.create', compact('columns', 'table', 'cols'));
     }
 
-    public function edit($table, $needle)
+    /**
+     * Show edit page
+     *
+     * @author Xuan
+     * @param $table
+     * @param $id
+     * @return \Illuminate\View\View
+     */
+    public function edit($table, $id)
     {
-        $datetimepickers = [];
-        $timepickers = [];
 
-//        $columns = DB::table('crud_table_rows')->where('table_name', $table)->get();
-        $columns = TableRow::where('table_name', $table)->get();
+        $columns = TableRow::where('table_name', $table)->where('editable', 1)->get();
 
-        foreach ($columns as $column) {
+        $cols = DB::table($table)->where('id', $id)->first();
+        $cols = Utils::object_to_array($cols);
 
-            if ($column->type == "datetime") {
-                $datetimepickers[] = $column->column_name;
-            }
-
-            if ($column->type == "time") {
-                $timepickers[] = $column->column_name;
-            }
-
-            if ($column->type == "radio") {
-                $radios = DB::table("crud_table_pairs")->where("crud_table_id", $column->id)->get();
-                $column->radios = $radios;
-            }
-
-            if ($column->type == "checkbox") {
-                $checkboxes = DB::table("crud_table_pairs")->where("crud_table_id", $column->id)->get();
-                $column->checkboxes = $checkboxes;
-            }
-
-            if ($column->type == "range") {
-                $range = DB::table("crud_table_pairs")->where("crud_table_id", $column->id)->first();
-                $column->range_from = $range->key;
-                $column->range_to = $range->value;
-            }
-
-            if ($column->type == "select") {
-                $selects = DB::table("crud_table_pairs")->where("crud_table_id", $column->id)->get();
-                $column->selects = $selects;
-            }
-        }
-
-        $cols = DB::table($this->table->table_name)->where($this->table->needle, $needle)->first();
-
-        $this->data['cols'] = (array)$cols;
-        $this->data['columns'] = $columns;
-        $this->data['datetimepickers'] = $datetimepickers;
-        $this->data['timepickers'] = $timepickers;
-        $this->data['table'] = $this->table;
-        $this->data['needle'] = $needle;
-
-        return view('tables.edit', $this->data);
+        return view('tables.edit', compact('table', 'id', 'columns', 'cols'));
     }
 
-    public function update($table, $needle)
+    /**
+     * Update a row
+     *
+     * @author Xuan
+     * @param $table
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update($table, $id)
     {
-        $inputs = Input::except(['_token']);
+        $columns = TableRow::where('table_name', $table)->where('editable', 1)->get();
 
-        $arr = [];
-
-        foreach ($inputs as $column => $value) {
-            if (Schema::hasColumn($table, $column)) {
-                $arr[$column] = $value;
-            }
-        }
-
-        $columns = DB::table('crud_table_rows')->where("table_name", $table)->get();
         $rules = [];
-        $data = $inputs;
-
-        for ($i = 0; $i < sizeOf($columns); $i++) {
-
-            if (!empty($columns[$i]->edit_rule) && isset($data[$columns[$i]->column_name]))
-                $rules[$columns[$i]->column_name] = $columns[$i]->edit_rule;
+        foreach($columns as $column){
+            $rules[$column->column_name] = $column->edit_rule;
         }
 
-        $v = Validator::make($data, $rules);
+        $v = Validator::make(Input::all(), $rules);
 
-        if ($v->fails()) {
+        if($v->fails()){
             Session::flash('error_msg', Utils::buildMessages($v->errors()->all()));
-            return redirect("/table/" . $table . "/list");
+            return redirect()->back();
         }
 
-        DB::table($table)->where($this->table->needle, $needle)->update($arr);
+        DB::table($table)->where('id', $id)->update(Input::except(['_token']));
 
         Session::flash('success_msg', 'Entry updated successfully');
-
-        return redirect("/table/{$table}/list");
-
+        return redirect()->back();
     }
 
-    public function store()
+    /**
+     * Store a new
+     *
+     * @author Xuan
+     * @param $table
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function store($table)
     {
+        $columns = TableRow::where('table_name', $table)->where('creatable', 1)->get();
 
-        $inputs = Input::except('_token');
-
-        $columns = DB::table('crud_table_rows')->where("table_name", $this->table->table_name)->get();
         $rules = [];
-        $data = $inputs;
-
-        for ($i = 0; $i < sizeOf($columns); $i++) {
-
-            if (!empty($columns[$i]->create_rule) && isset($data[$columns[$i]->column_name]))
-                $rules[$columns[$i]->column_name] = $columns[$i]->create_rule;
+        foreach($columns as $column){
+            $rules[$column->column_name] = $column->create_rule;
         }
 
-        $v = Validator::make($data, $rules);
+        $v = Validator::make(Input::all(), $rules);
 
-        if ($v->fails()) {
+        if($v->fails()){
             Session::flash('error_msg', Utils::buildMessages($v->errors()->all()));
             return Redirect::back()->withErrors($v)->withInput();
         }
 
-        $arr = [];
-
-        foreach ($inputs as $column => $value) {
-            if (Schema::hasColumn($this->table->table_name, $column)) {
-
-                if(is_file($value)){
-                    $arr[$column] = $this->uploadFeaturedImage($value);
-                }else{
-                    $arr[$column] = $value;
-                }
-            }
-        }
-
-        DB::table($this->table->table_name)->insert($arr);
+        DB::table($table)->insertGetId(Input::except(['_token']));
 
         Session::flash('success_msg', 'Entry created successfully');
-
-        return redirect("/table/{$this->table->table_name}/list");
-
+        return redirect('/table/'.$table.'/list');
     }
 
+    /**
+     * Show table's rows list
+     *
+     * @author Xuan
+     * @param $table_name
+     * @return \Illuminate\View\View
+     */
     public function all($table_name)
     {
         $table = Table::where('table_name', $table_name)->first();
@@ -226,12 +149,19 @@ class TablesController extends Controller
         return view('tables.list', compact('columns_names', 'table', 'columns', 'ids'));
     }
 
+    /**
+     * Delete a row
+     *
+     * @author Xuan
+     * @param $table
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function delete($table, $id)
     {
         DB::table($table)->where('id', $id)->delete();
 
         Session::flash('success_msg', 'Entry deleted successfully');
-
         return redirect("/table/{$table}/list");
     }
 
