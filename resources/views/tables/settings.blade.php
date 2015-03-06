@@ -124,22 +124,20 @@
 
                                                 <div id="{!! $column->column_name !!}[range]" style="display:none;">
                                                     <input type="text" name="{!! $column->column_name !!}[range_from]"
-                                                           value="{!!
-                                        $column->type=='radio'?$column->range_from:'' !!}" class="form-control"
+                                                           value="{!! $column->type=='radio'?$column->range_from:'' !!}" class="form-control"
                                                            placeholder="Range From"/>
                                                     <input type="text" name="{!! $column->column_name !!}[range_to]"
-                                                           value="{!!
-                                        $column->type=='radio'?$column->range_to:'' !!}" class="form-control"
+                                                           value="{!! $column->type=='radio'?$column->range_to:'' !!}" class="form-control"
                                                            placeholder="Range To"/>
                                                 </div>
 
                                             </div>
                                             <div class="col-md-3">
                                                 <input type="text" class="form-control" name="{!! $column->column_name
-                                    !!}[create_validator]" value="{!! $column->create_rule !!}"
+                                    !!}[create_rule]" value="{!! $column->create_rule !!}"
                                                        placeholder="Create Validation Rule">
                                                 <input type="text" class="form-control" name="{!! $column->column_name
-                                    !!}[edit_validator]" value="{!! $column->edit_rule !!}"
+                                    !!}[edit_rule]" value="{!! $column->edit_rule !!}"
                                                        placeholder="Edit Validation Rule">
                                             </div>
 
@@ -159,8 +157,8 @@
                                                         name="{!! $column->column_name !!}[editable]">
                                                     <option {!! $column->editable==1?"selected":"" !!} value="1">Show
                                                     </option>
-                                                    <option {!! $column->editable==0?"selected":"" !!} value="0">Don't
-                                                        Show
+                                                    <option {!! $column->editable==0?"selected":"" !!}
+                                                            value="0">Don't Show
                                                     </option>
                                                 </select>
                                             </div>
@@ -170,8 +168,8 @@
                                                         name="{!! $column->column_name !!}[listable]">
                                                     <option {!! $column->listable==1?"selected":"" !!} value="1">Show
                                                     </option>
-                                                    <option {!! $column->listable==0?"selected":"" !!} value="0">Don't
-                                                        Show
+                                                    <option {!! $column->listable==0?"selected":"" !!}
+                                                            value="0">Don't Show
                                                     </option>
                                                 </select>
                                             </div>
@@ -186,15 +184,17 @@
                                                     <div class='row margin'>
                                                         <div class='col-md-4'>
                                                             <input type='text'
-                                                                   name='{!! $column->column_name !!}[radioname][]'
+                                                                   name='{!! $column->column_name !!}[radio][names][]'
                                                                    required class='form-control'
-                                                                   placeholder='{!! $radio->key !!}'>
+                                                                   placeholder='{!! $radio->key !!}'
+                                                                   value="{!! $radio->key !!}">
                                                         </div>
                                                         <div class='col-md-4'>
                                                             <input type='text'
-                                                                   name='{!! $column->column_name !!}[radioval][]'
+                                                                   name='{!! $column->column_name !!}[radio][values][]'
                                                                    required class='form-control'
-                                                                   placeholder='{!! $radio->value !!}'>
+                                                                   placeholder='{!! $radio->value !!}'
+                                                                   value="{!! $radio->value !!}">
                                                         </div>
                                                         <div class='col-md-1'>
                                                             <button onclick='radio_delete(this)'
@@ -216,15 +216,17 @@
                                                     <div class='row margin'>
                                                         <div class='col-md-4'>
                                                             <input type='text'
-                                                                   name='{!! $column->column_name !!}[checkboxname][]'
+                                                                   name='{!! $column->column_name !!}[checkbox][names][]'
                                                                    required class='form-control'
-                                                                   placeholder='{!! $checkbox->key !!}'>
+                                                                   placeholder='{!! $checkbox->key !!}'
+                                                                   value="{!! $checkbox->key !!}">
                                                         </div>
                                                         <div class='col-md-4'>
                                                             <input type='text'
-                                                                   name='{!! $column->column_name !!}[checkboxval][]'
+                                                                   name='{!! $column->column_name !!}[checkbox][values][]'
                                                                    required class='form-control'
-                                                                   placeholder='{!! $checkbox->value !!}'>
+                                                                   placeholder='{!! $checkbox->value !!}'
+                                                                   value="{!! $checkbox->value !!}">
                                                         </div>
                                                         <div class='col-md-1'>
                                                             <button onclick='checkbox_delete(this)'
@@ -246,7 +248,7 @@
                                                     <div class='row margin'>
                                                         <div class='col-md-4'>
                                                             <input type='text'
-                                                                   name='{!! $column->column_name !!}[selectname][]'
+                                                                   name='{!! $column->column_name !!}[select][names][]'
                                                                    required
                                                                    class='form-control'
                                                                    placeholder='{!! $select->key !!}'
@@ -254,7 +256,7 @@
                                                         </div>
                                                         <div class='col-md-4'>
                                                             <input type='text'
-                                                                   name='{!! $column->column_name !!}[selectval][]'
+                                                                   name='{!! $column->column_name !!}[select][values][]'
                                                                    required
                                                                    class='form-control'
                                                                    placeholder='{!! $select->value !!}'
@@ -343,9 +345,9 @@
                 var column_name = $(this).data('column');
                 $('#' + column_name + '_radio').show();
                 $('#' + column_name + '_radio').append("<div class='row margin'><div class='col-md-4'><input " +
-                "type='text' name='" + column_name + "[radioname][]' required class='form-control' " +
+                "type='text' name='" + column_name + "[radio][names][]' required class='form-control' " +
                 "placeholder='Name'></div>" +
-                "<div class='col-md-4'><input type='text' name='" + column_name + "[radioval][]'  required " +
+                "<div class='col-md-4'><input type='text' name='" + column_name + "[radio][values][]'  required " +
                 "class='form-control' placeholder='Value'></div>" +
                 "<div class='col-md-1'><button onclick='radio_delete(this)' class='btn btn-danger btn-sm'>-</button></div></div>");
             });
@@ -354,9 +356,9 @@
                 var column_name = $(this).data('column');
                 $('#' + column_name + '_checkbox').show();
                 $('#' + column_name + '_checkbox').append("<div class='row margin'><div class='col-md-4'><input " +
-                "type='text' name='" + column_name + "[checkboxname][]' required class='form-control' " +
+                "type='text' name='" + column_name + "[checkbox][names][]' required class='form-control' " +
                 "placeholder='Name'></div>" +
-                "<div class='col-md-4'><input type='text' name='" + column_name + "[checkboxval][]'  required " +
+                "<div class='col-md-4'><input type='text' name='" + column_name + "[checkbox][values][]'  required " +
                 "class='form-control' placeholder='Value'></div>" +
                 "<div class='col-md-1'><button onclick='checkbox_delete(this)' class='btn btn-danger btn-sm'>-</button></div></div>");
             });
@@ -365,9 +367,9 @@
                 var column_name = $(this).data('column');
                 $('#' + column_name + '_select').show();
                 $('#' + column_name + '_select').append("<div class='row margin'><div class='col-md-4'><input " +
-                "type='text' name='" + column_name + "[selectname][]' required class='form-control' " +
+                "type='text' name='" + column_name + "[select][names][]' required class='form-control' " +
                 "placeholder='Name'></div>" +
-                "<div class='col-md-4'><input type='text' name='" + column_name + "[selectval][]'  required " +
+                "<div class='col-md-4'><input type='text' name='" + column_name + "[select][values][]'  required " +
                 "class='form-control' placeholder='Value'></div>" +
                 "<div class='col-md-1'><button onclick='select_delete(this)' class='btn btn-danger btn-sm'>-</button></div></div>");
             });
