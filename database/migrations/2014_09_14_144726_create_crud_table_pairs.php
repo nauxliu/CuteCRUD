@@ -14,7 +14,7 @@ class CreateCrudTablePairs extends Migration {
 	{
         Schema::create('crud_table_pairs',function($table){
             $table->increments('id');
-            $table->integer('crud_table_id');
+            $table->integer('row_id');
             $table->string('key');
             $table->string('value');
             $table->timestamps();

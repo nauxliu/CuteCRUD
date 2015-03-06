@@ -36,7 +36,7 @@ class TableRow extends Model {
 
     public function pairs()
     {
-        return $this->hasMany('App\Models\TablePair', 'crud_table_id');
+        return $this->hasMany('App\Models\TablePair', 'row_id');
     }
 
     public function updateRow($row_data)

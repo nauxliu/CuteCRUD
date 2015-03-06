@@ -16,6 +16,7 @@ class CreateCrudTableRows extends Migration {
             $table->increments('id');
             $table->string('table_name');
             $table->string('column_name');
+            $table->string('fontawesome_class');
             $table->string('type');
             $table->string('create_rule');
             $table->string('edit_rule');
