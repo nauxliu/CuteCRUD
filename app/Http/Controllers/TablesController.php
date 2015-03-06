@@ -1,5 +1,8 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\Table;
+use App\Models\TableRow;
+use App\Models\TempModel;
 use \DB;
 use \Request;
 use \Validator;
@@ -38,13 +41,14 @@ class TablesController extends Controller
         }
     }
 
-    public function create()
+    public function create($table)
     {
 
         $datetimepickers = [];
         $timepickers = [];
+        $columns = TableRow::where('table_name', $table)->get();
 
-        $columns = DB::table('crud_table_rows')->where('table_name', $this->table->table_name)->get();
+
 
         foreach ($columns as $column) {
 
@@ -77,21 +81,16 @@ class TablesController extends Controller
                 $column->selects = $selects;
             }
         }
-
-        $this->data['columns'] = $columns;
-        $this->data['datetimepickers'] = $datetimepickers;
-        $this->data['timepickers'] = $timepickers;
-        $this->data['table'] = $this->table;
-
-        return view('tables.create', $this->data);
+        return view('tables.create', compact('columns', 'datetimepickers', 'timepickers', 'table'));
     }
 
-    public function edit($table_name, $needle)
+    public function edit($table, $needle)
     {
         $datetimepickers = [];
         $timepickers = [];
 
-        $columns = DB::table('crud_table_rows')->where('table_name', $this->table->table_name)->get();
+//        $columns = DB::table('crud_table_rows')->where('table_name', $table)->get();
+        $columns = TableRow::where('table_name', $table)->get();
 
         foreach ($columns as $column) {
 
@@ -137,19 +136,19 @@ class TablesController extends Controller
         return view('tables.edit', $this->data);
     }
 
-    public function update($table_name, $needle)
+    public function update($table, $needle)
     {
         $inputs = Input::except(['_token']);
 
         $arr = [];
 
         foreach ($inputs as $column => $value) {
-            if (Schema::hasColumn($this->table->table_name, $column)) {
+            if (Schema::hasColumn($table, $column)) {
                 $arr[$column] = $value;
             }
         }
 
-        $columns = DB::table('crud_table_rows')->where("table_name", $this->table->table_name)->get();
+        $columns = DB::table('crud_table_rows')->where("table_name", $table)->get();
         $rules = [];
         $data = $inputs;
 
@@ -163,14 +162,14 @@ class TablesController extends Controller
 
         if ($v->fails()) {
             Session::flash('error_msg', Utils::buildMessages($v->errors()->all()));
-            return redirect("/table/" . $this->table->table_name . "/list");
+            return redirect("/table/" . $table . "/list");
         }
 
-        DB::table($this->table->table_name)->where($this->table->needle, $needle)->update($arr);
+        DB::table($table)->where($this->table->needle, $needle)->update($arr);
 
         Session::flash('success_msg', 'Entry updated successfully');
 
-        return redirect("/table/{$this->table->table_name}/list");
+        return redirect("/table/{$table}/list");
 
     }
 
@@ -217,35 +216,23 @@ class TablesController extends Controller
 
     }
 
-    public function all()
+    public function all($table_name)
     {
-        $headers = [];
-        $visible_columns_names = DB::table('crud_table_rows')->where('table_name', $this->table->table_name)->where('listable', 1)->lists('column_name');
-        $columns = DB::table($this->table->table_name)->select($visible_columns_names)->get();
+        $table = Table::where('table_name', $table_name)->first();
+        $columns_names = TableRow::where('table_name', $table_name)->where('listable', 1)->lists('column_name');
+        $columns = DB::table($table_name)->select($columns_names)->paginate(15);
+        $ids = DB::table($table_name)->select('id')->paginate(15)->lists('id');
 
-        $ids = DB::table($this->table->table_name)->lists($this->table->needle);
-
-        if (sizeOf($columns) > 0) {
-            $headers = array_keys((array)$columns[0]);
-        }
-
-        $this->data['headers'] = $headers;
-        $this->data['rows'] = Utils::object_to_array($columns);
-        $this->data['table'] = $this->table;
-        $this->data['ids'] = $ids;
-
-        return view('tables.list', $this->data);
+        return view('tables.list', compact('columns_names', 'table', 'columns', 'ids'));
     }
 
-    public function delete($table_name, $needle)
+    public function delete($table, $id)
     {
-        $cols = DB::table('crud_table_rows')->where('table_name', $this->table->table_name)->get();
-
-        DB::table($this->table->table_name)->where($this->table->needle, $needle)->delete();
+        DB::table($table)->where('id', $id)->delete();
 
         Session::flash('success_msg', 'Entry deleted successfully');
 
-        return redirect("/table/{$this->table->table_name}/list");
+        return redirect("/table/{$table}/list");
     }
 
 }

@@ -124,10 +124,12 @@
 
                                                 <div id="{!! $column->column_name !!}[range]" style="display:none;">
                                                     <input type="text" name="{!! $column->column_name !!}[range_from]"
-                                                           value="{!! $column->type=='radio'?$column->range_from:'' !!}" class="form-control"
+                                                           value="{!! $column->type=='radio'?$column->range_from:'' !!}"
+                                                           class="form-control"
                                                            placeholder="Range From"/>
                                                     <input type="text" name="{!! $column->column_name !!}[range_to]"
-                                                           value="{!! $column->type=='radio'?$column->range_to:'' !!}" class="form-control"
+                                                           value="{!! $column->type=='radio'?$column->range_to:'' !!}"
+                                                           class="form-control"
                                                            placeholder="Range To"/>
                                                 </div>
 

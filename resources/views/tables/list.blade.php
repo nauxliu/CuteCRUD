@@ -25,6 +25,7 @@
         </div>
 
         <a href="/table/{!! $table->table_name !!}/create" class="btn btn-success btn-lg margin">Create New Entry</a>
+        <button class="btn btn-warning">Delete Selected</button>
         <!-- /.box-header -->
         <div class="box-body table-responsive">
 
@@ -33,8 +34,9 @@
             <table id="crud_list" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                    @foreach($headers as $header)
-                        <th>{!! $header !!}</th>
+                        <th>{!! Form::checkbox('all') !!}</th>
+                    @foreach($columns_names as $name)
+                        <th>{!! $name !!}</th>
                     @endforeach
                     @if($table->editable)
                         <th>Edit</th>
@@ -43,18 +45,18 @@
                 </tr>
                 </thead>
                 <tbody>
-                @for($i=0;$i<sizeOf($rows);$i++)
+                @foreach($columns as $key => $column)
                 <tr>
-                    <input type="hidden" name="position" value="{!! $i !!}"/>
-                    @for($j=0;$j<sizeOf($rows[$i]);$j++)
-                        <td>{!!  $rows[$i][$headers[$j]]  !!}</td>
-                    @endfor
+                        <td>{!! Form::checkbox('ids[]', $ids[$key]) !!}</td>
+                    @foreach($column as $item)
+                        <td>{!!  $item  !!}</td>
+                    @endforeach
                     @if($table->editable)
-                    <td><a href="/table/{!! $table->table_name !!}/edit/{!! $ids[$i] !!}" class="btn btn-success btn-sm">Edit</a></td>
+                    <td><a href="/table/{!! $table->table_name !!}/edit/{!! $ids[$key] !!}" class="btn btn-success btn-sm">Edit</a></td>
                     @endif
-                    <td><a href="/table/{!! $table->table_name !!}/delete/{!! $ids[$i] !!}" class="btn btn-warning btn-sm">Delete</a></td>
+                    <td><a href="/table/{!! $table->table_name !!}/delete/{!! $ids[$key]!!}" class="btn btn-warning btn-sm">Delete</a></td>
                 </tr>
-                @endfor
+                @endforeach
                 </tbody>
             </table>
         </div>

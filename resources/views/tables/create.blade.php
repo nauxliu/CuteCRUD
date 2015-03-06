@@ -35,12 +35,13 @@
 
                         <div class="row margin">
                             <strong><p>New Entry</p></strong>
-                            {!! Form::open(['url'=>'/table/'.$table->table_name.'/create','files'=>'true']) !!}
+                            {!! Form::open(['url'=>'/table/'.$table.'/create','files'=>'true']) !!}
                             <div class="col-md-12">
 
                             @include('layouts.notifications')
 
                             @foreach($columns as $column)
+                                {!! '';$column_name = $column->name !!}
                                 @if($column->creatable==1)
                                 @if($column->type=="text")
                                 <div class="form-group">
@@ -50,10 +51,11 @@
                                 @endif
 
                                 @if($column->type=="password")
-                                <div class="form-group">
-                                    <label for="{!! $column->column_name !!}">{!! $column->column_name !!}</label>
-                                    <input name="{!! $column->column_name !!}" type="password" class="form-control" id="{!! $column->column_name !!}" placeholder="Enter {!! $column->column_name !!}">
-                                </div>
+                                    @include('tables.components.password')
+                                {{--<div class="form-group">--}}
+                                    {{--<label for="{!! $column->column_name !!}">{!! $column->column_name !!}</label>--}}
+                                    {{--<input name="{!! $column->column_name !!}" type="password" class="form-control" id="{!! $column->column_name !!}" placeholder="Enter {!! $column->column_name !!}">--}}
+                                {{--</div>--}}
                                 @endif
 
                                 @if($column->type=="number")
