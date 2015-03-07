@@ -151,6 +151,7 @@ return [
 		 */
 		'Collective\Html\HtmlServiceProvider',
         'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider',
+        'Laracasts\Flash\FlashServiceProvider',
 
 	],
 
@@ -202,6 +203,7 @@ return [
 
 		'Form' 		=> 'Collective\Html\FormFacade',
       	'HTML' 		=> 'Collective\Html\HtmlFacade',
+        'Flash' => 'Laracasts\Flash\Flash',
 
 	],
 
