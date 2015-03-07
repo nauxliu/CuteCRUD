@@ -28,11 +28,9 @@ class TablesController extends Controller
     }
 
     /**
-     * show create page
+     * Show Create Page
      *
-     * @author Xuan
-     * @param $table
-     * @return \Illuminate\View\View
+     * @Get("table/{table_name}/create", as="table.create")
      */
     public function create($table)
     {
@@ -44,11 +42,7 @@ class TablesController extends Controller
     /**
      * Show edit page
      *
-     * @author Xuan
-     * @param $table
-     * @param $needle
-     * @return \Illuminate\View\View
-     * @internal param $id
+     * @Get("table/{table_name}/edit/{id}", as="table.edit")
      */
     public function edit($table, $needle)
     {
@@ -64,11 +58,7 @@ class TablesController extends Controller
     /**
      * Update a row
      *
-     * @author Xuan
-     * @param $table
-     * @param $needle
-     * @return \Illuminate\Http\RedirectResponse
-     * @internal param $id
+     * @Post("table/{table_name}/update/{id}", as="table.update")
      */
     public function update($table, $needle)
     {
@@ -94,11 +84,9 @@ class TablesController extends Controller
     }
 
     /**
-     * Store a new
+     * Store Row
      *
-     * @author Xuan
-     * @param $table
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @Post("table/{table_name}/create", as="table.store")
      */
     public function store($table)
     {
@@ -125,9 +113,7 @@ class TablesController extends Controller
     /**
      * Show table's rows list
      *
-     * @author Xuan
-     * @param $table_name
-     * @return \Illuminate\View\View
+     * @Get("table/{table_name}/list", as="table.show")
      */
     public function all($table_name)
     {
@@ -142,11 +128,7 @@ class TablesController extends Controller
     /**
      * Delete a row
      *
-     * @author Xuan
-     * @param $table
-     * @param $needle
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @internal param $id
+     * @Get("table/{table_name}/delete/{id}", as="table.delete")
      */
     public function delete($table, $needle)
     {
@@ -159,9 +141,6 @@ class TablesController extends Controller
     /**
      * Get table's needle
      *
-     * @author Xuan
-     * @param $table
-     * @return String
      */
     protected function getNeedle($table)
     {

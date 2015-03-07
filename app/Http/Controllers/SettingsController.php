@@ -3,15 +3,17 @@
 use App\Http\FormComponents\Manager;
 use App\Models\Table;
 use App\Models\TableRow;
-use \DB;
-use \Request;
-use \Validator;
 use \Input;
 use \Session;
 use \Schema;
 
 class SettingsController extends Controller
 {
+    /**
+     * Show Setting Page
+     *
+     * @Get("table/{table_name}/settings", as="setting.show")
+     */
     public function settings($table)
     {
         if (!Schema::hasTable($table)) {
@@ -49,6 +51,11 @@ class SettingsController extends Controller
         return view('tables.settings', compact('columns', 'table'));
     }
 
+    /**
+     * Update Settings
+     *
+     * @Post("table/{table_name}/settings", as="setting.update")
+     */
     public function postSettings($table)
     {
         $columns = Input::get('columns');

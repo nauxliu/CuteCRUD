@@ -9,23 +9,32 @@ use App\Models\Table;
 class CRUDController extends Controller
 {
 
+    /**
+     * Show the Index Page
+     *
+     * @Get("/", as="index")
+     */
     public function index()
     {
         $rows = Table::all();
         return view('index', compact('rows'));
     }
 
+    /**
+     * Show Create Page
+     *
+     * @Get("crud/create", as="crud.create")
+     */
     public function create()
     {
         return view('crud.create');
     }
 
-    public function edit($id)
-    {
-        $crud = Table::find($id);
-        return view('crud.edit', compact('crud'));
-    }
-
+    /**
+     * Update curd
+     *
+     * @Post("crud/update/{id}", as="curd.update")
+     */
     public function update($id)
     {
         //TODO: use middleware
@@ -53,6 +62,22 @@ class CRUDController extends Controller
         return redirect('/');
     }
 
+    /**
+     * Show Edit Page
+     *
+     * @Get("crud/edit/{id}", as="crud.edit")
+     */
+    public function edit($id)
+    {
+        $crud = Table::find($id);
+        return view('crud.edit', compact('crud'));
+    }
+
+    /**
+     * Store crud
+     *
+     * @Post("crud/create", as="crud.store")
+     */
     public function store()
     {
         //TODO: use middleware
@@ -74,6 +99,11 @@ class CRUDController extends Controller
         return redirect('/');
     }
 
+    /**
+     * Delete crud
+     *
+     * @Get("crud/delete/{id}", as="crud.delete")
+     */
     public function delete($id){
         Table::destroy($id);
         Session::flash('success_msg','CRUD deleted successfully');
