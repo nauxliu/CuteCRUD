@@ -12,7 +12,7 @@
         <small>Control panel</small>
     </h1>
     <ol class="breadcrumb">
-        <li><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a href="{!! route('index') !!}"><i class="fa fa-dashboard"></i> Home</a></li>
         <li class="active">Dashboard</li>
     </ol>
 </section>
@@ -24,7 +24,8 @@
             <h3 class="box-title"></h3>
         </div>
 
-        <a href="/table/{!! $table->table_name !!}/create" class="btn btn-success btn-lg margin">Create New Entry</a>
+        <a href="{!! route('table.create', $table->table_name) !!}" class="btn btn-success btn-lg margin">Create New
+            Entry</a>
         <button class="btn btn-warning">Delete Selected</button>
         <!-- /.box-header -->
         <div class="box-body table-responsive">
@@ -52,9 +53,10 @@
                         <td>{!!  $item  !!}</td>
                     @endforeach
                     @if($table->editable)
-                    <td><a href="/table/{!! $table->table_name !!}/edit/{!! $ids[$key] !!}" class="btn btn-success btn-sm">Edit</a></td>
+                        <td><a href="{!! route('table.edit', [$table->table_name, $ids[$key]]) !!}" class="btn
+                        btn-success btn-sm">Edit</a></td>
                     @endif
-                    <td><a href="/table/{!! $table->table_name !!}/delete/{!! $ids[$key]!!}" class="btn btn-warning btn-sm">Delete</a></td>
+                        <td><a href="{!! route('table.delete', [$table->table_name, $ids[$key]]) !!}" class="btn btn-warning btn-sm">Delete</a></td>
                 </tr>
                 @endforeach
                 </tbody>

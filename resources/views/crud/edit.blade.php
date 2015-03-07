@@ -26,7 +26,7 @@
     <div class="tab-pane active" id="crud_create">
 
         <div class="row margin">
-            {!! Form::open(['url'=>'/crud/update/'.$crud->id]) !!}
+            {!! Form::open(['route' => ['crud.update', $crud->id] ]) !!}
             <div class="col-md-5">
 
                 @include('layouts.notifications')

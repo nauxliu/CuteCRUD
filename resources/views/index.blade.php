@@ -58,8 +58,8 @@
                     <td>{!! $row->editable !!}</td>
                     <td>{!! $row->listable !!}</td>
                     <td>{!! $row->created_at !!}</td>
-                    <td><a href="/crud/edit/{!! $row->id !!}" class="btn btn-success btn-sm">Edit</a></td>
-                    <td><a href="/crud/delete/{!! $row->id !!}" class="btn btn-warning btn-sm">Delete</a></td>
+                    <td><a href="{!! route('crud.edit', $row->id) !!}" class="btn btn-success btn-sm">Edit</a></td>
+                    <td><a href="{!! route('crud.delete', $row->id) !!}" class="btn btn-warning btn-sm">Delete</a></td>
                 </tr>
                 @endforeach
                 </tbody>

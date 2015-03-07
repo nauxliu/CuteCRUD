@@ -33,7 +33,7 @@ class CRUDController extends Controller
     /**
      * Update curd
      *
-     * @Post("crud/update/{id}", as="curd.update")
+     * @Post("crud/update/{id}", as="crud.update")
      */
     public function update($id)
     {
@@ -59,7 +59,7 @@ class CRUDController extends Controller
         Table::find($id)->update($request_data);
 
         Session::flash('success_msg','CRUD updated successfully');
-        return redirect('/');
+        return redirect()->route('index');
     }
 
     /**
@@ -96,7 +96,7 @@ class CRUDController extends Controller
 
         Table::create($request_data);
         Session::flash('success_msg','CRUD created successfully');
-        return redirect('/');
+        return redirect()->route('index');
     }
 
     /**
@@ -107,6 +107,6 @@ class CRUDController extends Controller
     public function delete($id){
         Table::destroy($id);
         Session::flash('success_msg','CRUD deleted successfully');
-        return redirect('/')->withInput();
+        return redirect()->route('index')->withInput();
     }
 }

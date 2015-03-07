@@ -15,7 +15,7 @@
         <small>Control panel</small>
     </h1>
     <ol class="breadcrumb">
-        <li><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a href="{!! route('index') !!}"><i class="fa fa-dashboard"></i> Home</a></li>
         <li class="active">Create</li>
     </ol>
 </section>
@@ -35,22 +35,22 @@
 
                         <div class="row margin">
                             <strong><p>New Entry</p></strong>
-                            {!! Form::open(['url'=>'/table/'.$table.'/create','files'=>'true']) !!}
-                            <div class="col-md-12">
+                            {!! Form::open(['route' => ['table.create', $table],'files'=>'true']) !!}
+                                <div class="col-md-12">
 
-                            @include('layouts.notifications')
+                                @include('layouts.notifications')
 
-                            @foreach($columns as $column)
-                                {!! '';$column_name = $column->column_name !!}
+                                @foreach($columns as $column)
+                                    {!! '';$column_name = $column->column_name !!}
 
-                                @if($column->creatable)
-                                    @include('tables.components.'.$column->type)
-                                @endif
-                            @endforeach
+                                    @if($column->creatable)
+                                        @include('tables.components.'.$column->type)
+                                    @endif
+                                @endforeach
 
-                            <button type="submit" class="btn btn-success">Create</button>
+                                <button type="submit" class="btn btn-success">Create</button>
 
-                            </div>
+                                </div>
                             {!! Form::close() !!}
 
                         </div>

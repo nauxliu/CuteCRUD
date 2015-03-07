@@ -18,7 +18,7 @@ class SettingsController extends Controller
     {
         if (!Schema::hasTable($table)) {
             Session::flash('error_msg', 'Specified table not found');
-            return view('tables.settings', $this->data);
+            return view('tables.settings');
         }
 
         $columns_count = count(Schema::getColumnListing($table));
@@ -69,7 +69,7 @@ class SettingsController extends Controller
 
         Session::flash('success_msg', 'Table metadata has been updated');
 
-        return redirect("/table/{$table}/list");
+        return redirect()->route('table.show',$table);
     }
 
 }

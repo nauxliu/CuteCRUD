@@ -39,12 +39,12 @@
                 @if($crud->creatable || $crud->editable || $crud->listable)
                 <ul class="treeview-menu">
                     @if($crud->creatable)
-                        <li><a href="/table/{!! $crud->table_name !!}/create"><i class="fa fa-angle-double-right"></i> Create</a></li>
+                        <li><a href="{!! route('table.create', $crud->table_name) !!}"><i class="fa fa-angle-double-right"></i> Create</a></li>
                     @endif
                     @if($crud->listable)
-                        <li><a href="/table/{!! $crud->table_name !!}/list"><i class="fa fa-angle-double-right"></i> List</a></li>
+                        <li><a href="{!! route('table.show', $crud->table_name) !!}"><i class="fa fa-angle-double-right"></i> List</a></li>
                     @endif
-                    <li><a href="/table/{!! $crud->table_name !!}/settings"><i class="fa fa-angle-double-right"></i> Settings</a></li>
+                        <li><a href="{!! route('setting.show', $crud->table_name) !!}"><i class="fa fa-angle-double-right"></i> Settings</a></li>
                 </ul>
                 @endif
             </li>

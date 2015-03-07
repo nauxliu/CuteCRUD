@@ -15,7 +15,7 @@
         <small>Control panel</small>
     </h1>
     <ol class="breadcrumb">
-        <li><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a href="{!! route('index') !!}"><i class="fa fa-dashboard"></i> Home</a></li>
         <li class="active">Edit</li>
     </ol>
 </section>
@@ -35,7 +35,7 @@
 
                         <div class="row margin">
                             <strong><p>Edit Entry</p></strong>
-                            {!! Form::open(['url'=>'/table/'.$table.'/update/'.$needle,'files'=>'true']) !!}
+                            {!! Form::open(['url' => route('table.create', [$table, $needle]), 'files'=>'true']) !!}
                             <div class="col-md-12">
 
                             @include('layouts.notifications')

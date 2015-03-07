@@ -80,7 +80,7 @@ class TablesController extends Controller
         DB::table($table)->where($this->getNeedle($table), $needle)->update($input);
 
         Session::flash('success_msg', 'Entry updated successfully');
-        return redirect('/table/'.$table.'/list');
+        return redirect()->route('table.show', $table);
     }
 
     /**
@@ -107,7 +107,7 @@ class TablesController extends Controller
         DB::table($table)->insertGetId(Input::except(['_token']));
 
         Session::flash('success_msg', 'Entry created successfully');
-        return redirect('/table/' . $table . '/list');
+        return redirect()->route('table.show', $table);
     }
 
     /**
@@ -135,7 +135,7 @@ class TablesController extends Controller
         DB::table($table)->where($this->getNeedle($table), $needle)->delete();
 
         Session::flash('success_msg', 'Entry deleted successfully');
-        return redirect("/table/{$table}/list");
+        return redirect()->route('table.show', $table);
     }
 
     /**
