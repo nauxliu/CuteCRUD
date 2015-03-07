@@ -54,7 +54,7 @@
 
                 <div class="form-group">
                     {!! Form::label('fontawesome_class', 'Font Awesome Class') !!}
-                    {!! Form::text('fontawesome_classe', null,
+                    {!! Form::text('fontawesome_class', null,
                         ['id' => 'fontawesome_class', 'class' => 'form-control', 'placeholder' => 'Ex : fa fa-ellipsis-v'])
                     !!}
                 </div>

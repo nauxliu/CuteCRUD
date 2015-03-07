@@ -4,7 +4,6 @@ use App\Models\Table;
 use App\Models\TableRow;
 use App\Models\TempModel;
 use \DB;
-use \Request;
 use \Validator;
 use \Input;
 use \App\Utils;
@@ -12,18 +11,6 @@ use \Session;
 
 class TablesController extends Controller
 {
-    protected $table;
-
-    function __construct()
-    {
-        $this->beforeFilter('table_settings');
-        $this->beforeFilter('table_needle');
-
-        $segments      = Request::segments();
-        $this->table   = DB::table('crud_table')->where('table_name', $segments[1])->first();
-        $this->settings= DB::table('crud_settings')->first();
-
-    }
 
     public function uploadFeaturedImage($file)
     {
@@ -33,7 +20,7 @@ class TablesController extends Controller
         $name = $timestamp . "_file." . $ext;
 
         // move uploaded file from temp to uploads directory
-        if ($file->move(public_path() . $this->settings->upload_path , $name)) {
+        if ($file->move(public_path() . $this->settings->upload_path, $name)) {
             return $this->settings->upload_path . $name;
         } else {
             return false;
@@ -59,18 +46,19 @@ class TablesController extends Controller
      *
      * @author Xuan
      * @param $table
-     * @param $id
+     * @param $needle
      * @return \Illuminate\View\View
+     * @internal param $id
      */
-    public function edit($table, $id)
+    public function edit($table, $needle)
     {
 
         $columns = TableRow::where('table_name', $table)->where('editable', 1)->get();
 
-        $cols = DB::table($table)->where('id', $id)->first();
+        $cols = DB::table($table)->where($this->getNeedle($table), $needle)->first();
         $cols = Utils::object_to_array($cols);
 
-        return view('tables.edit', compact('table', 'id', 'columns', 'cols'));
+        return view('tables.edit', compact('table', 'needle', 'columns', 'cols'));
     }
 
     /**
@@ -78,29 +66,31 @@ class TablesController extends Controller
      *
      * @author Xuan
      * @param $table
-     * @param $id
+     * @param $needle
      * @return \Illuminate\Http\RedirectResponse
+     * @internal param $id
      */
-    public function update($table, $id)
+    public function update($table, $needle)
     {
         $columns = TableRow::where('table_name', $table)->where('editable', 1)->get();
 
         $rules = [];
-        foreach($columns as $column){
+        foreach ($columns as $column) {
             $rules[$column->column_name] = $column->edit_rule;
         }
 
         $v = Validator::make(Input::all(), $rules);
 
-        if($v->fails()){
+        if ($v->fails()) {
             Session::flash('error_msg', Utils::buildMessages($v->errors()->all()));
             return redirect()->back();
         }
 
-        DB::table($table)->where('id', $id)->update(Input::except(['_token']));
+        $input = Input::only(array_keys($rules));
+        DB::table($table)->where($this->getNeedle($table), $needle)->update($input);
 
         Session::flash('success_msg', 'Entry updated successfully');
-        return redirect()->back();
+        return redirect('/table/'.$table.'/list');
     }
 
     /**
@@ -115,13 +105,13 @@ class TablesController extends Controller
         $columns = TableRow::where('table_name', $table)->where('creatable', 1)->get();
 
         $rules = [];
-        foreach($columns as $column){
+        foreach ($columns as $column) {
             $rules[$column->column_name] = $column->create_rule;
         }
 
         $v = Validator::make(Input::all(), $rules);
 
-        if($v->fails()){
+        if ($v->fails()) {
             Session::flash('error_msg', Utils::buildMessages($v->errors()->all()));
             return Redirect::back()->withErrors($v)->withInput();
         }
@@ -129,7 +119,7 @@ class TablesController extends Controller
         DB::table($table)->insertGetId(Input::except(['_token']));
 
         Session::flash('success_msg', 'Entry created successfully');
-        return redirect('/table/'.$table.'/list');
+        return redirect('/table/' . $table . '/list');
     }
 
     /**
@@ -154,15 +144,28 @@ class TablesController extends Controller
      *
      * @author Xuan
      * @param $table
-     * @param $id
+     * @param $needle
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @internal param $id
      */
-    public function delete($table, $id)
+    public function delete($table, $needle)
     {
-        DB::table($table)->where('id', $id)->delete();
+        DB::table($table)->where($this->getNeedle($table), $needle)->delete();
 
         Session::flash('success_msg', 'Entry deleted successfully');
         return redirect("/table/{$table}/list");
+    }
+
+    /**
+     * Get table's needle
+     *
+     * @author Xuan
+     * @param $table
+     * @return String
+     */
+    protected function getNeedle($table)
+    {
+        return Table::where('table_name', $table)->select('needle')->first()->needle;
     }
 
 }

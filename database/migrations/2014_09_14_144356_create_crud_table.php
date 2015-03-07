@@ -17,6 +17,8 @@ class CreateCrudTable extends Migration {
             $table->string('crud_name');
             $table->string('table_name');
             $table->string('slug');
+            $table->string('needle');
+            $table->string('fontawesome_class');
             $table->boolean('creatable');
             $table->boolean('editable');
             $table->boolean('listable');

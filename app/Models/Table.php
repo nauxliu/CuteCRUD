@@ -23,7 +23,9 @@ class Table extends Model implements AuthenticatableContract, CanResetPasswordCo
      *
      * @var array
      */
-    protected $guarded = array([]);
+    protected $fillable = [
+        'crud_name', 'table_name', 'needle', 'fontawesome_class', 'creatable', 'editable', 'listable', 'slug'
+    ];
 
     /**
      * Create Validation Rules
@@ -33,7 +35,6 @@ class Table extends Model implements AuthenticatableContract, CanResetPasswordCo
     public static $rules = [
         'crud_name'  => 'required',
         'table_name' => 'required|unique:crud_table,table_name',
-        'needle'     => 'required',
     ];
 
     /**
@@ -44,7 +45,6 @@ class Table extends Model implements AuthenticatableContract, CanResetPasswordCo
     public static $edit_rules = [
         'crud_name'  => 'required',
         'table_name' => 'required',
-        'needle'     => 'required',
     ];
 
     /**

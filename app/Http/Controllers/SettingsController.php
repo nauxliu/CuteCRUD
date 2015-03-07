@@ -12,19 +12,6 @@ use \Schema;
 
 class SettingsController extends Controller
 {
-    protected $table;
-
-    function __construct()
-    {
-        $this->beforeFilter('table_settings', array('except' => array('settings')));
-        $this->beforeFilter('table_needle', array('except' => array('settings')));
-
-        $segments = Request::segments();
-        $this->table = DB::table('crud_table')->where('table_name', $segments[1])->first();
-        $this->settings = DB::table('crud_settings')->first();
-
-    }
-
     public function settings($table)
     {
         if (!Schema::hasTable($table)) {

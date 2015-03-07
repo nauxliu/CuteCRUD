@@ -35,7 +35,7 @@
 
                         <div class="row margin">
                             <strong><p>Edit Entry</p></strong>
-                            {!! Form::open(['url'=>'/table/'.$table.'/update/'.$id,'files'=>'true']) !!}
+                            {!! Form::open(['url'=>'/table/'.$table.'/update/'.$needle,'files'=>'true']) !!}
                             <div class="col-md-12">
 
                             @include('layouts.notifications')
