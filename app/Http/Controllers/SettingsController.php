@@ -16,6 +16,17 @@ class SettingsController extends Controller
      */
     public function settings($table)
     {
+        $type_options = [
+            'text'      =>  'Text',
+            'password'  =>  'Password',
+            'number'    =>  'Number',
+            'radio'     =>  'Radio',
+            'checkbox'  =>  'Checkbox',
+            'select'    =>  'Select',
+            'content_edit'  =>  'Content Edit',
+            'range'     =>  'Range'
+        ];
+
         if (!Schema::hasTable($table)) {
             Session::flash('error_msg', 'Specified table not found');
             return view('tables.settings');
@@ -29,26 +40,7 @@ class SettingsController extends Controller
 
         $columns = TableRow::where('table_name', $table)->get();
 
-        foreach ($columns as $column) {
-            switch($column->type){
-                case 'radio':
-                    $column->radios = $column->pairs()->get();
-                    break;
-                case 'checkbox':
-                    $column->checkboxes = $column->pairs()->get();
-                    break;
-                case 'range':
-                    $range = $column->pairs()->get();
-                    $column->range_from = $range->key;
-                    $column->range_to = $range->value;
-                    break;
-                case 'select':
-                    $column->selects = $column->pairs()->get();
-                    break;
-            }
-        }
-
-        return view('tables.settings', compact('columns', 'table'));
+        return view('tables.settings', compact('columns', 'table', 'type_options'));
     }
 
     /**
@@ -69,7 +61,7 @@ class SettingsController extends Controller
 
         Session::flash('success_msg', 'Table metadata has been updated');
 
-        return redirect()->route('table.show',$table);
+        return redirect()->route('setting.show', $table);
     }
 
 }

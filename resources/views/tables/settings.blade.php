@@ -44,85 +44,21 @@
                                         <input type="hidden" name="columns[]" value="{!! $column->column_name !!}"/>
 
                                         <div class="row">
-                                            <div class="col-md-3"><strong>
-                                                    <small>Type</small>
-                                                </strong></div>
-                                            <div class="col-md-3"><strong>
-                                                    <small>Validator</small>
-                                                </strong></div>
-                                            <div class="col-md-2"><strong>
-                                                    <small>In Create Form</small>
-                                                </strong></div>
-                                            <div class="col-md-2"><strong>
-                                                    <small>In Edit Form</small>
-                                                </strong></div>
-                                            <div class="col-md-2"><strong>
-                                                    <small>In Listing Table</small>
-                                                </strong></div>
+                                            <div class="col-md-3"><strong><small>Type</small></strong></div>
+                                            <div class="col-md-3"><strong><small>Validator</small></strong></div>
+                                            <div class="col-md-2"><strong><small>In Create Form</small></strong></div>
+                                            <div class="col-md-2"><strong><small>In Edit Form</small></strong></div>
+                                            <div class="col-md-2"><strong><small>In Listing Table</small></strong></div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <select class="form-control column_type"
-                                                        data-column="{!! $column->column_name !!}"
-                                                        name="{!! $column->column_name !!}[type]">
-                                                    <!--Radio Checkbox Select Range-->
-                                                    <option {!! $column->type=="text"?"selected":"" !!} value="text">
-                                                        Text
-                                                    </option>
-                                                    <option {!! $column->type=="password"?"selected":"" !!}
-                                                            value="password">Password
-                                                    </option>
-                                                    <option {!! $column->type=="number"?"selected":"" !!}value="number">
-                                                        Number
-                                                    </option>
-                                                    <option {!! $column->type=="text_area"?"selected":"" !!}
-                                                            value="text_area">Normal Textarea
-                                                    </option>
-                                                    <option {!! $column->type=="content_editor"?"selected":"" !!}
-                                                            value="content_editor">Content Editor
-                                                    </option>
-                                                    <option {!! $column->type=="gender_full"?"selected":"" !!}
-                                                            value="gender_full">Gender(Returns male/female)
-                                                    </option>
-                                                    <option {!! $column->type=="gender_short"?"selected":"" !!}
-                                                            value="gender_short">Gender(Returns m/f)
-                                                    </option>
-                                                    <option {!! $column->type=="true_false"?"selected":"" !!}
-                                                            value="true_false">True/False
-                                                    </option>
-                                                    <option {!! $column->type=="one_or_zero"?"selected":"" !!}
-                                                            value="one_or_zero">1/0
-                                                    </option>
-                                                    <option {!! $column->type=="range"?"selected":"" !!} value="range">
-                                                        Range
-                                                    </option>
-                                                    <option {!! $column->type=="file"?"selected":"" !!} value="file">
-                                                        File
-                                                    </option>
-                                                    <option {!! $column->type=="date"?"selected":"" !!} value="date">
-                                                        Date
-                                                    </option>
-                                                    <option {!! $column->type=="time"?"selected":"" !!} value="time">
-                                                        Time
-                                                    </option>
-                                                    <option {!! $column->type=="datetime"?"selected":"" !!}
-                                                            value="datetime">DateTime
-                                                    </option>
-                                                    <option {!! $column->type=="colorpicker"?"selected":"" !!}
-                                                            value="colorpicker">Color Picker
-                                                    </option>
-                                                    <option {!! $column->type=="radio"?"selected":"" !!} value="radio">
-                                                        Radio
-                                                    </option>
-                                                    <option {!! $column->type=="checkbox"?"selected":"" !!}
-                                                            value="checkbox">Checkbox
-                                                    </option>
-                                                    <option {!! $column->type=="select"?"selected":"" !!}value="select">
-                                                        Select
-                                                    </option>
-                                                </select>
+                                                {!! Form::select('type', $type_options, $column->type, [
+                                                    'class'         => "form-control column_type",
+                                                    'name'          => $column->column_name.'[type]',
+                                                    'data-column'   => $column->column_name,
+                                                ]) !!}
 
-                                                <div id="{!! $column->column_name !!}[range]" style="display:none;">
+                                                <div id="{!! $column->column_name !!}_range" style="display:none;">
                                                     <input type="text" name="{!! $column->column_name !!}[range_from]"
                                                            value="{!! $column->type=='radio'?$column->range_from:'' !!}"
                                                            class="form-control"
@@ -143,38 +79,17 @@
                                                        placeholder="Edit Validation Rule">
                                             </div>
 
-                                            <div class="col-md-2">
-                                                <select class="form-control"
-                                                        name="{!! $column->column_name !!}[creatable]">
-                                                    <option {!! $column->creatable==1?"selected":"" !!} value="1">Show
-                                                    </option>
-                                                    <option {!! $column->creatable==0?"selected":"" !!} value="0">Don't
-                                                        Show
-                                                    </option>
-                                                </select>
-                                            </div>
+                                            {{-- Fields: creatable, editable, listable --}}
+                                            @foreach(['creatable', 'editable', 'listable'] as $able)
+                                                <div class="col-md-2">
+                                                    {!! Form::select("{$column->column_name}[{$able}]", [
+                                                            1   =>  'Show',
+                                                            0   =>  'Don\'t Show',
+                                                        ], $column->$able, ['class' => "form-control"])
+                                                    !!}
+                                                </div>
+                                            @endforeach
 
-                                            <div class="col-md-2">
-                                                <select class="form-control"
-                                                        name="{!! $column->column_name !!}[editable]">
-                                                    <option {!! $column->editable==1?"selected":"" !!} value="1">Show
-                                                    </option>
-                                                    <option {!! $column->editable==0?"selected":"" !!}
-                                                            value="0">Don't Show
-                                                    </option>
-                                                </select>
-                                            </div>
-
-                                            <div class="col-md-2">
-                                                <select class="form-control"
-                                                        name="{!! $column->column_name !!}[listable]">
-                                                    <option {!! $column->listable==1?"selected":"" !!} value="1">Show
-                                                    </option>
-                                                    <option {!! $column->listable==0?"selected":"" !!}
-                                                            value="0">Don't Show
-                                                    </option>
-                                                </select>
-                                            </div>
                                         </div>
 
                                         <div id="{!! $column->column_name !!}_radio" {!! $column->type=="radio"?"":"style='display:none;'" !!}>
@@ -182,7 +97,7 @@
                                                     class="btn btn-primary btn-sm radio_add">+ Radio
                                             </button>
                                             @if($column->type=="radio")
-                                                @foreach($column->radios as $radio)
+                                                @foreach($column->pairs as $radio)
                                                     <div class='row margin'>
                                                         <div class='col-md-4'>
                                                             <input type='text'
@@ -214,7 +129,7 @@
                                                 Checkbox
                                             </button>
                                             @if($column->type=="checkbox")
-                                                @foreach($column->checkboxes as $checkbox)
+                                                @foreach($column->pairs as $checkbox)
                                                     <div class='row margin'>
                                                         <div class='col-md-4'>
                                                             <input type='text'
@@ -246,7 +161,7 @@
                                                 Option
                                             </button>
                                             @if($column->type=="select")
-                                                @foreach($column->selects as $select)
+                                                @foreach($column->pairs as $select)
                                                     <div class='row margin'>
                                                         <div class='col-md-4'>
                                                             <input type='text'
