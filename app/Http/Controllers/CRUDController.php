@@ -49,12 +49,12 @@ class CRUDController extends Controller
         if ($v->fails()) {
             $msg =  Utils::buildMessages($v->errors()->all());
             Flash::error($msg);
-            return redirect("/crud/edit/".$id)->withErrors($v)->withInput();
+            return redirect()->route('crud.edit',$id)->withErrors($v)->withInput();
         }
 
         if( 0 != Table::where('table_name', Request::get('table_name'))->where('id','!=',$id)->count()){
             Flash::error('Table name already exist.');
-            return redirect("/crud/edit/".$id)->withInput();
+            return redirect()->route('crud.edit',$id)->withInput();
         }
 
         Table::find($id)->update(Input::all());
