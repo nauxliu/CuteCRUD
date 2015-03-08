@@ -85,7 +85,7 @@ class TablesController extends Controller
 
         if ($v->fails()) {
             Session::flash('error_msg', Utils::buildMessages($v->errors()->all()));
-            return Redirect::back()->withErrors($v)->withInput();
+            return redirect()->back()->withErrors($v)->withInput();
         }
 
         DB::table($table)->insertGetId(Input::except(['_token']));
@@ -104,9 +104,9 @@ class TablesController extends Controller
         $table = Table::where('table_name', $table_name)->first();
         $columns_names = TableRow::where('table_name', $table_name)->where('listable', 1)->lists('column_name');
         $columns = DB::table($table_name)->select($columns_names)->paginate(15);
-        $ids = DB::table($table_name)->select('id')->paginate(15)->lists('id');
+        $needles = DB::table($table_name)->paginate(15)->lists($table->needle);
 
-        return view('tables.list', compact('columns_names', 'table', 'columns', 'ids'));
+        return view('tables.list', compact('columns_names', 'table', 'columns', 'needles'));
     }
 
     /**
@@ -119,6 +119,17 @@ class TablesController extends Controller
         DB::table($table)->where($this->getNeedle($table), $needle)->delete();
 
         Session::flash('success_msg', 'Entry deleted successfully');
+        return redirect()->route('table.show', $table);
+    }
+
+    /**
+     * Delete rows
+     *
+     * @Delete("table/{table_name}", as="table.delete_many")
+     */
+    public function deleteMany($table)
+    {
+        DB::table($table)->whereIn($this->getNeedle($table), Input::get('needles'))->delete();
         return redirect()->route('table.show', $table);
     }
 

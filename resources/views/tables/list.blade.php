@@ -24,6 +24,11 @@
             <h3 class="box-title"></h3>
         </div>
 
+        {!! Form::open([
+            'url' => route('table.delete_many',  $table->table_name),
+            'method' => 'delete'])
+        !!}
+
         <a href="{!! route('table.create', $table->table_name) !!}" class="btn btn-success btn-lg margin">Create New
             Entry</a>
         <button class="btn btn-warning">Delete Selected</button>
@@ -35,34 +40,39 @@
             <table id="crud_list" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                        <th>{!! Form::checkbox('all') !!}</th>
+                        {{--<th width="10"><button class="btn btn-sm btn-info" id="select_all">Select All</button></th>--}}
+                        <th width="10"><input type="checkbox" id="select_all"/></th>
                     @foreach($columns_names as $name)
                         <th>{!! $name !!}</th>
                     @endforeach
                     @if($table->editable)
-                        <th>Edit</th>
+                        <th width="70">Edit</th>
                     @endif
-                        <th>Delete</th>
+                        <th width="70">Delete</th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($columns as $key => $column)
                 <tr>
-                        <td>{!! Form::checkbox('ids[]', $ids[$key]) !!}</td>
+                        <td>{!! Form::checkbox('needles[]', $needles[$key]) !!}</td>
                     @foreach($column as $item)
                         <td>{!!  $item  !!}</td>
                     @endforeach
                     @if($table->editable)
-                        <td><a href="{!! route('table.edit', [$table->table_name, $ids[$key]]) !!}" class="btn
-                        btn-success btn-sm">Edit</a></td>
+                        <td><a href="{!! route('table.edit', [$table->table_name, $needles[$key]]) !!}" class="btn
+                        btn-success btn-sm center-block">Edit</a></td>
                     @endif
-                        <td><a href="{!! route('table.delete', [$table->table_name, $ids[$key]]) !!}" class="btn btn-warning btn-sm">Delete</a></td>
+                        <td><a href="{!! route('table.delete', [$table->table_name, $needles[$key]]) !!}" class="btn
+                        btn-warning btn-sm center-block">Delete</a></td>
                 </tr>
                 @endforeach
                 </tbody>
             </table>
         </div>
         <!-- /.box-body -->
+
+        {!! Form::close() !!}
+
     </div>
     <!-- /.box -->
 </section><!-- /.content -->
@@ -82,5 +92,15 @@
             "bAutoWidth": false
         });
     });
+
+</script>
+<script>
+    $('#select_all').on('ifChecked', function(){
+        $("input[name='needles[]']").iCheck('check');
+    });
+    $('#select_all').on('ifUnchecked', function(){
+        $("input[name='needles[]']").iCheck('uncheck');
+    });
+
 </script>
 @stop
