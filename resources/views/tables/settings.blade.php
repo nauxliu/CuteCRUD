@@ -57,17 +57,19 @@
                                                     'name'          => $column->column_name.'[type]',
                                                     'data-column'   => $column->column_name,
                                                 ]) !!}
-
-                                                <div id="{!! $column->column_name !!}_range" style="display:none;">
-                                                    <input type="text" name="{!! $column->column_name !!}[range_from]"
-                                                           value="{!! $column->type=='radio'?$column->range_from:'' !!}"
-                                                           class="form-control"
-                                                           placeholder="Range From"/>
-                                                    <input type="text" name="{!! $column->column_name !!}[range_to]"
-                                                           value="{!! $column->type=='radio'?$column->range_to:'' !!}"
-                                                           class="form-control"
-                                                           placeholder="Range To"/>
-                                                </div>
+                                                    {{-- Range --}}
+                                                    @if($column->type == 'range')
+                                                        <div id="{!! $column->column_name !!}_range">
+                                                        {!! ''; $range = $column->pairs()->first() !!}
+                                                        {!! Form::text($column->column_name.'[from]', $range->key, ['class' => 'form-control', 'placeholder' => 'Range From']) !!}
+                                                        {!! Form::text($column->column_name.'[to]', $range->value, ['class' => 'form-control', 'placeholder' => 'Range To']) !!}
+                                                        </div>
+                                                    @else
+                                                        <div id="{!! $column->column_name !!}_range", style="display:none">
+                                                        {!! Form::text($column->column_name.'[from]', null, ['class' => 'form-control', 'placeholder' => 'Range From']) !!}
+                                                        {!! Form::text($column->column_name.'[to]', null, ['class' => 'form-control', 'placeholder' => 'Range To']) !!}
+                                                        </div>
+                                                    @endif
 
                                             </div>
                                             <div class="col-md-3">
