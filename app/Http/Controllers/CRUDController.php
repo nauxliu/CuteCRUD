@@ -42,7 +42,7 @@ class CRUDController extends Controller
      */
     public function update($id)
     {
-        $v = Validator::make(Input::all(), Table::$rules);
+        $v = Validator::make(Input::all(), Table::$edit_rules);
 
         if ($v->fails()) {
             $msg =  Utils::buildMessages($v->errors()->all());
