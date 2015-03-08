@@ -1,12 +1,10 @@
 <?php namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Input;
-use Laracasts\Flash\Flash;
-use Session;
-use Request;
-use Validator;
 use App\Utils;
 use App\Models\Table;
+use Laracasts\Flash\Flash;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * Class CRUDController
@@ -44,7 +42,7 @@ class CRUDController extends Controller
      */
     public function update($id)
     {
-        $v = Validator::make(Request::all(), Table::$rules);
+        $v = Validator::make(Input::all(), Table::$rules);
 
         if ($v->fails()) {
             $msg =  Utils::buildMessages($v->errors()->all());
@@ -52,7 +50,7 @@ class CRUDController extends Controller
             return redirect()->route('crud.edit',$id)->withErrors($v)->withInput();
         }
 
-        if( 0 != Table::where('table_name', Request::get('table_name'))->where('id','!=',$id)->count()){
+        if( 0 != Table::where('table_name', Input::get('table_name'))->where('id','!=',$id)->count()){
             Flash::error('Table name already exist.');
             return redirect()->route('crud.edit',$id)->withInput();
         }

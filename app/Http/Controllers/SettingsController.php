@@ -1,12 +1,10 @@
 <?php namespace App\Http\Controllers;
 
-use App\Http\FormComponents\Manager;
 use App\Models\Table;
 use App\Models\TableRow;
-use \Input;
 use Laracasts\Flash\Flash;
-use \Session;
-use \Schema;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Schema;
 
 class SettingsController extends Controller
 {

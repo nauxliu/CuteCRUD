@@ -1,14 +1,13 @@
 <?php namespace App\Http\Controllers;
 
+use App\Utils;
 use App\Models\Table;
 use App\Models\TableRow;
 use App\Models\TempModel;
-use \DB;
 use Laracasts\Flash\Flash;
-use \Validator;
-use \Input;
-use \App\Utils;
-use \Session;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Validator;
 
 class TablesController extends Controller
 {
