@@ -35,7 +35,7 @@
 
                         <div class="row margin">
                             <strong><p>Edit Entry</p></strong>
-                            {!! Form::open(['url' => route('table.create', [$table, $needle]), 'files'=>'true']) !!}
+                            {!! Form::open(['url' => route('table.update', [$table, $needle]), 'files'=>'true']) !!}
                             <div class="col-md-12">
 
                             @include('layouts.notifications')
@@ -43,9 +43,7 @@
                             @foreach($columns as $column)
                                 {!! '';$column_name = $column->column_name !!}
 
-                                @if($column->creatable)
-                                    @include('tables.components.'.$column->type)
-                                @endif
+                                @include('tables.components.'.$column->type)
                             @endforeach
 
                             <button type="submit" class="btn btn-success">Update</button>

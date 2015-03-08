@@ -89,7 +89,7 @@ class Table extends Model implements AuthenticatableContract, CanResetPasswordCo
             ]);
         }
         //Delete unused columns
-        TableRow::whereNotIn('column_name', $columns)->delete;
+        TableRow::whereNotIn('column_name', $columns)->delete();
     }
 
     public function rows()

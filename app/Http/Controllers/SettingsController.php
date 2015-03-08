@@ -23,7 +23,7 @@ class SettingsController extends Controller
             'radio'     =>  'Radio',
             'checkbox'  =>  'Checkbox',
             'select'    =>  'Select',
-            'content_edit'  =>  'Content Edit',
+            'content_editor'  =>  'Content Editor',
             'range'     =>  'Range'
         ];
 

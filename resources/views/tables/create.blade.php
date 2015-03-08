@@ -43,9 +43,7 @@
                                 @foreach($columns as $column)
                                     {!! '';$column_name = $column->column_name !!}
 
-                                    @if($column->creatable)
-                                        @include('tables.components.'.$column->type)
-                                    @endif
+                                    @include('tables.components.'.$column->type)
                                 @endforeach
 
                                 <button type="submit" class="btn btn-success">Create</button>

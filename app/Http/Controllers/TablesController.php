@@ -11,22 +11,6 @@ use \Session;
 
 class TablesController extends Controller
 {
-
-    public function uploadFeaturedImage($file)
-    {
-
-        $timestamp = time();
-        $ext = $file->guessClientExtension();
-        $name = $timestamp . "_file." . $ext;
-
-        // move uploaded file from temp to uploads directory
-        if ($file->move(public_path() . $this->settings->upload_path, $name)) {
-            return $this->settings->upload_path . $name;
-        } else {
-            return false;
-        }
-    }
-
     /**
      * Show Create Page
      *
