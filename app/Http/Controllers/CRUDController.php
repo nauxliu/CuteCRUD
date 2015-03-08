@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Input;
 use Laracasts\Flash\Flash;
 use Session;
 use Request;
@@ -7,6 +8,11 @@ use Validator;
 use App\Utils;
 use App\Models\Table;
 
+/**
+ * Class CRUDController
+ *
+ * @Middleware("App\Http\Middleware\CRUDMiddleware")
+ */
 class CRUDController extends Controller
 {
 
@@ -38,14 +44,7 @@ class CRUDController extends Controller
      */
     public function update($id)
     {
-        //TODO: use middleware
-        $request_data = Request::all();
-        $request_data['creatable'] = Request::has('creatable');
-        $request_data['editable']  = Request::has('editable');
-        $request_data['listable']  = Request::has('listable');
-        $request_data['slug']      = str_slug(Request::get('table_name'));
-
-        $v = Validator::make($request_data, Table::$edit_rules);
+        $v = Validator::make(Request::all(), Table::$rules);
 
         if ($v->fails()) {
             $msg =  Utils::buildMessages($v->errors()->all());
@@ -58,7 +57,7 @@ class CRUDController extends Controller
             return redirect("/crud/edit/".$id)->withInput();
         }
 
-        Table::find($id)->update($request_data);
+        Table::find($id)->update(Input::all());
 
         Session::flash('success_msg','CRUD updated successfully');
         return redirect()->route('index');
@@ -82,14 +81,7 @@ class CRUDController extends Controller
      */
     public function store()
     {
-        //TODO: use middleware
-        $request_data = Request::all();
-        $request_data['creatable'] = Request::has('creatable');
-        $request_data['editable']  = Request::has('editable');
-        $request_data['listable']  = Request::has('listable');
-        $request_data['slug']      = str_slug(Request::get('table_name'));
-
-        $v = Validator::make(Request::all(), Table::$rules);
+        $v = Validator::make(Input::all(), Table::$rules);
 
         if ($v->fails()) {
             $msg =  Utils::buildMessages($v->errors()->all());
@@ -97,7 +89,7 @@ class CRUDController extends Controller
             return redirect()->back()->withErrors($v)->withInput();
         }
 
-        Table::create($request_data);
+        Table::create(Input::all());
 
         Flash::success('CRUD created successfully.');
         return redirect()->route('index');
