@@ -4,6 +4,7 @@ use App\Http\FormComponents\Manager;
 use App\Models\Table;
 use App\Models\TableRow;
 use \Input;
+use Laracasts\Flash\Flash;
 use \Session;
 use \Schema;
 
@@ -28,7 +29,7 @@ class SettingsController extends Controller
         ];
 
         if (!Schema::hasTable($table)) {
-            Session::flash('error_msg', 'Specified table not found');
+            Flash::error('Specified table not found.');
             return view('tables.settings');
         }
 
@@ -59,7 +60,7 @@ class SettingsController extends Controller
             $row->updateRow($row_data);
         }
 
-        Session::flash('success_msg', 'Table metadata has been updated');
+        Flash::success('Table metadata has been updated.');
 
         return redirect()->route('setting.show', $table);
     }

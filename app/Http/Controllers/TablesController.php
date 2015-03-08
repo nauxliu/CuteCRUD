@@ -4,6 +4,7 @@ use App\Models\Table;
 use App\Models\TableRow;
 use App\Models\TempModel;
 use \DB;
+use Laracasts\Flash\Flash;
 use \Validator;
 use \Input;
 use \App\Utils;
@@ -56,14 +57,15 @@ class TablesController extends Controller
         $v = Validator::make(Input::all(), $rules);
 
         if ($v->fails()) {
-            Session::flash('error_msg', Utils::buildMessages($v->errors()->all()));
+            $msg = Utils::buildMessages($v->errors()->all());
+            Flash::error($msg);
             return redirect()->back();
         }
 
         $input = Input::only(array_keys($rules));
         DB::table($table)->where($this->getNeedle($table), $needle)->update($input);
 
-        Session::flash('success_msg', 'Entry updated successfully');
+        Flash::success('Entry updated successfully.');
         return redirect()->route('table.show', $table);
     }
 
@@ -84,13 +86,14 @@ class TablesController extends Controller
         $v = Validator::make(Input::all(), $rules);
 
         if ($v->fails()) {
-            Session::flash('error_msg', Utils::buildMessages($v->errors()->all()));
+            $msg = Utils::buildMessages($v->errors()->all());
+            Flash::error($msg);
             return redirect()->back()->withErrors($v)->withInput();
         }
 
         DB::table($table)->insertGetId(Input::except(['_token']));
 
-        Session::flash('success_msg', 'Entry created successfully');
+        Flash::success('Entry created successfully.');
         return redirect()->route('table.show', $table);
     }
 
@@ -118,7 +121,7 @@ class TablesController extends Controller
     {
         DB::table($table)->where($this->getNeedle($table), $needle)->delete();
 
-        Session::flash('success_msg', 'Entry deleted successfully');
+        Flash::success('Entry deleted successfully.');
         return redirect()->route('table.show', $table);
     }
 

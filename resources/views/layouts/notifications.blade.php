@@ -1,11 +1,7 @@
-@if(Session::has('error_msg'))
-<div class="alert alert-danger">
-    <b>Error!</b> {!! Session::get('error_msg') !!}
-</div>
-@endif
+@if (Session::has('flash_notification.message'))
+    <div class="alert alert-{!! Session::get('flash_notification.level') !!}">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 
-@if(Session::has('success_msg'))
-<div class="alert alert-success">
-    <b>Success!</b> {!! Session::get('success_msg') !!}
-</div>
+        {!! Session::get('flash_notification.message') !!}
+    </div>
 @endif

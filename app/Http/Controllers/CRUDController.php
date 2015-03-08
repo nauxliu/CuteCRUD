@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use Laracasts\Flash\Flash;
 use Session;
 use Request;
 use Validator;
@@ -47,12 +48,13 @@ class CRUDController extends Controller
         $v = Validator::make($request_data, Table::$edit_rules);
 
         if ($v->fails()) {
-            Session::flash('error_msg',Utils::buildMessages($v->errors()->all()));
+            $msg =  Utils::buildMessages($v->errors()->all());
+            Flash::error($msg);
             return redirect("/crud/edit/".$id)->withErrors($v)->withInput();
         }
 
         if( 0 != Table::where('table_name', Request::get('table_name'))->where('id','!=',$id)->count()){
-            Session::flash('error_msg','Table name already exist');
+            Flash::error('Table name already exist.');
             return redirect("/crud/edit/".$id)->withInput();
         }
 
@@ -90,12 +92,14 @@ class CRUDController extends Controller
         $v = Validator::make(Request::all(), Table::$rules);
 
         if ($v->fails()) {
-            Session::flash('error_msg', Utils::buildMessages($v->errors()->all()));
+            $msg =  Utils::buildMessages($v->errors()->all());
+            Flash::error($msg);
             return redirect()->back()->withErrors($v)->withInput();
         }
 
         Table::create($request_data);
-        Session::flash('success_msg','CRUD created successfully');
+
+        Flash::success('CRUD created successfully.');
         return redirect()->route('index');
     }
 
@@ -106,7 +110,8 @@ class CRUDController extends Controller
      */
     public function delete($id){
         Table::destroy($id);
-        Session::flash('success_msg','CRUD deleted successfully');
+
+        Flash::success('CRUD deleted successfully.');
         return redirect()->route('index')->withInput();
     }
 }
