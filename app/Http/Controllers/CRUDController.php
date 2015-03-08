@@ -59,7 +59,7 @@ class CRUDController extends Controller
 
         Table::find($id)->update(Input::all());
 
-        Session::flash('success_msg','CRUD updated successfully');
+        Flash::success('CRUD updated successfully.');
         return redirect()->route('index');
     }
 
