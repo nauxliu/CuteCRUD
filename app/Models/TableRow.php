@@ -34,9 +34,26 @@ class TableRow extends Model {
 	 */
 	protected $hidden = ['password', 'remember_token'];
 
+    /**
+     * Has many pairs
+     *
+     * @author Xuan
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function pairs()
     {
         return $this->hasMany('App\Models\TablePair', 'row_id');
+    }
+
+    /**
+     * Has a relationship
+     *
+     * @author Xuan
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function relationship()
+    {
+        return $this->hasOne('App\Models\Relationship', 'row_id');
     }
 
     public function updateRow($row_data)
