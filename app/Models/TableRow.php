@@ -56,12 +56,23 @@ class TableRow extends Model {
         return $this->hasOne('App\Models\Relationship', 'row_id');
     }
 
+    /**
+     * Belongs to a table
+     *
+     * @author Xuan
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function table(){
+        return $this->belongsTo('App\Models\Table', 'table_name', 'table_name');
+    }
+
     public function updateRow($row_data)
     {
         $type = array_get($row_data, 'type', 'text');
 
         //delete old pair
         $this->pairs()->delete();
+        $this->relationship()->delete();
         //Form Component class name
         $component_name = $this->namespace.studly_case($type);
 

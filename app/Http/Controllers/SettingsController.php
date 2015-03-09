@@ -1,7 +1,9 @@
 <?php namespace App\Http\Controllers;
 
+use App\Http\FormComponents\ValidationFailException;
 use App\Models\Table;
 use App\Models\TableRow;
+use App\Utils;
 use Laracasts\Flash\Flash;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Schema;
@@ -22,8 +24,9 @@ class SettingsController extends Controller
             'radio'     =>  'Radio',
             'checkbox'  =>  'Checkbox',
             'select'    =>  'Select',
+            'range'     =>  'Range',
             'content_editor'  =>  'Content Editor',
-            'range'     =>  'Range'
+            'belongs_to'=>  'Belongs To',
         ];
 
         if (!Schema::hasTable($table)) {
@@ -55,7 +58,12 @@ class SettingsController extends Controller
             $row = TableRow::where('column_name', $column)->where('table_name', $table)->first();
 
             $row_data = Input::get($column);
-            $row->updateRow($row_data);
+            try{
+                $row->updateRow($row_data);
+            }catch (ValidationFailException $e){
+                Flash::error(Utils::buildMessages($e->getValidator()->errors()->all()));
+                return redirect()->back();
+            }
         }
 
         Flash::success('Table metadata has been updated.');

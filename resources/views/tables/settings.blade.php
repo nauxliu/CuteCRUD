@@ -52,6 +52,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
+                                                {{-- Select Column's Type --}}
                                                 {!! Form::select('type', $type_options, $column->type, [
                                                     'class'         => "form-control column_type",
                                                     'name'          => $column->column_name.'[type]',
@@ -191,6 +192,24 @@
                                             @endif
                                         </div>
 
+                                        {{-- Relationship: BelongsTo --}}
+                                        {!! ''; $relation = $column->relationship !!}
+                                        <div id="{!! $column->column_name !!}_belongs_to" class="row"
+                                             style="margin-top: 10px; {!! $column->type == 'belongs_to' ? '' : 'display:none;' !!}">
+                                            <div class="col-md-2">
+                                                    Table Name:
+                                                    {!! Form::text('table',isset($relation->table) ? $relation->table : null ,['class' => 'form-control', 'name' => $column->column_name.'[table]', 'placeholder' => 'Enter table name']) !!}
+                                                </div>
+                                                <div class="col-md-2">
+                                                    Foreign Key:
+                                                    {!! Form::text('foreign_key',isset($relation->table) ? $relation->table : null, ['class' => 'form-control', 'name' => $column->column_name.'[foreign_key]', 'placeholder' => 'Enter foreign key']) !!}
+                                                </div>
+                                                <div class="col-md-2">
+                                                    Show Column:
+                                                    {!! Form::text('show_column',isset($relation->table) ? $relation->table : null, ['class' => 'form-control', 'name' => $column->column_name.'[show_column]', 'placeholder' => 'Enter show column']) !!}
+                                                </div>
+                                        </div>
+
                                     @endforeach
 
                                     <button type="submit" class="btn btn-success">Save Changes</button>
@@ -242,6 +261,7 @@
                 $('#' + column_name + '_range').hide();
                 $('#' + column_name + '_checkbox').hide();
                 $('#' + column_name + '_select').hide();
+                $('#' + column_name + '_belongs_to').hide();
 
                 if (selected == "radio") {
                     $('#' + column_name + '_radio').show();
@@ -257,6 +277,10 @@
 
                 if (selected == "select") {
                     $('#' + column_name + '_select').show();
+                }
+
+                if (selected == "belongs_to") {
+                    $('#' + column_name + '_belongs_to').show();
                 }
             });
 
