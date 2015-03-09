@@ -1,23 +1,48 @@
-## Laravel PHP Framework
+#CuteCRUD
+CuteCRUD 是基于 Laravel-5 开发的通用网站管理后台解决方案。它可让你省下开发后台管理程序的时间，避免重复的 CRUD 代码。
 
-[![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)
-[![Total Downloads](https://poser.pugx.org/laravel/framework/downloads.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/framework/v/stable.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/framework/v/unstable.svg)](https://packagist.org/packages/laravel/framework)
-[![License](https://poser.pugx.org/laravel/framework/license.svg)](https://packagist.org/packages/laravel/framework)
+##特点
+1. 代码量小，php 代码 400 行左右。根据自己的需求开发和维护都相当方便。  
+2. Larvel 的表单验证规则直接可用。
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as authentication, routing, sessions, queueing, and caching.
+#安装
+在你的终端中执行以下命令：
 
-Laravel is accessible, yet powerful, providing powerful tools needed for large, robust applications. A superb inversion of control container, expressive migration system, and tightly integrated unit testing support give you the tools you need to build any application with which you are tasked.
+```bash
+git clone git@github.com:NauxLiu/CuteCRUD.git
+cd CuteCRUD
+composer install
+cp .env.example .env
+```
 
-## Official Documentation
+然后修改 `.env` 文件中的数据库配置。
 
-Documentation for the framework can be found on the [Laravel website](http://laravel.com/docs).
+生成 数据表：
 
-## Contributing
+```
+php artisan migrate
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
+Enjoy!
 
-### License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+##目前支持组件：
+
+1. Checkbox.
+2. Range.
+3. Radio
+4. Telect
+5. Text
+6. Password
+7. Number
+8. Content Editor
+
+后续将添加
+
+1. Relationship
+2. Date & Time
+
+##截图
+![](http://myblog-img.qiniudn.com/github/30F41C7D-8EA2-4C63-ADED-69ADF9E3808B.png)
+![](http://myblog-img.qiniudn.com/github/E7C861EB-0640-45CA-9E71-1F3B96ADC961.png)
+![](http://myblog-img.qiniudn.com/github/F1988665-3C57-4028-881A-318CF65E674C.png)
