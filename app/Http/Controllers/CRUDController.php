@@ -38,7 +38,7 @@ class CRUDController extends Controller
     /**
      * Update curd
      *
-     * @Post("crud/update/{id}", as="crud.update")
+     * @Put("crud/{id}", as="crud.update")
      */
     public function update($id)
     {
@@ -64,7 +64,7 @@ class CRUDController extends Controller
     /**
      * Show Edit Page
      *
-     * @Get("crud/edit/{id}", as="crud.edit")
+     * @Get("crud/{id}/edit", as="crud.edit")
      */
     public function edit($id)
     {
@@ -75,7 +75,7 @@ class CRUDController extends Controller
     /**
      * Store crud
      *
-     * @Post("crud/create", as="crud.store")
+     * @Post("crud", as="crud.store")
      */
     public function store()
     {
@@ -96,7 +96,7 @@ class CRUDController extends Controller
     /**
      * Delete crud
      *
-     * @Get("crud/delete/{id}", as="crud.delete")
+     * @Get("crud/{id}/delete", as="crud.delete")
      */
     public function delete($id){
         Table::destroy($id);
