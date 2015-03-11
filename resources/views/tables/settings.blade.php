@@ -210,6 +210,24 @@
                                                 </div>
                                         </div>
 
+                                        {{-- Relationship: HasOne --}}
+                                        {!! ''; $relation = $column->relationship !!}
+                                        <div id="{!! $column->column_name !!}_has_one" class="row"
+                                             style="margin-top: 10px; {!! $column->type == 'has_one' ? '' : 'display:none;' !!}">
+                                            <div class="col-md-2">
+                                                Table Name:
+                                                {!! Form::text('table',isset($relation->table) ? $relation->table : null ,['class' => 'form-control', 'name' => $column->column_name.'[table]', 'placeholder' => 'Enter table name']) !!}
+                                            </div>
+                                            <div class="col-md-2">
+                                                Foreign Key:
+                                                {!! Form::text('foreign_key',isset($relation->table) ? $relation->table : null, ['class' => 'form-control', 'name' => $column->column_name.'[foreign_key]', 'placeholder' => 'Enter foreign key']) !!}
+                                            </div>
+                                            <div class="col-md-2">
+                                                Show Column:
+                                                {!! Form::text('show_column',isset($relation->table) ? $relation->table : null, ['class' => 'form-control', 'name' => $column->column_name.'[show_column]', 'placeholder' => 'Enter show column']) !!}
+                                            </div>
+                                        </div>
+
                                     @endforeach
 
                                     <button type="submit" class="btn btn-success">Save Changes</button>
@@ -262,6 +280,7 @@
                 $('#' + column_name + '_checkbox').hide();
                 $('#' + column_name + '_select').hide();
                 $('#' + column_name + '_belongs_to').hide();
+                $('#' + column_name + '_has_one').hide();
 
                 if (selected == "radio") {
                     $('#' + column_name + '_radio').show();
@@ -281,6 +300,10 @@
 
                 if (selected == "belongs_to") {
                     $('#' + column_name + '_belongs_to').show();
+                }
+
+                if (selected == "has_one") {
+                    $('#' + column_name + '_has_one').show();
                 }
             });
 

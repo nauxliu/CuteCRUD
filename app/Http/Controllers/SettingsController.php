@@ -27,6 +27,7 @@ class SettingsController extends Controller
             'range'     =>  'Range',
             'content_editor'  =>  'Content Editor',
             'belongs_to'=>  'Belongs To',
+            'has_one'   =>  'Has One',
         ];
 
         if (!Schema::hasTable($table)) {
