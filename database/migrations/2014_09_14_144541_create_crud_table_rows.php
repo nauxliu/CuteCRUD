@@ -17,8 +17,8 @@ class CreateCrudTableRows extends Migration {
             $table->string('table_name');
             $table->string('column_name');
             $table->string('type');
-            $table->string('create_rule');
-            $table->string('edit_rule');
+            $table->string('create_rule')->default('');
+            $table->string('edit_rule')->default('');
             $table->boolean('creatable');
             $table->boolean('editable');
             $table->boolean('listable');
