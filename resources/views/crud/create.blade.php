@@ -26,7 +26,7 @@
     <div class="tab-pane active" id="crud_create">
 
         <div class="row margin">
-            {!! Form::open(['route'=>'crud.create']) !!}
+            {!! Form::open(['route'=>'crud.store']) !!}
             <div class="col-md-5">
 
                 @include('layouts.notifications')
