@@ -23,12 +23,4 @@ class TablePair extends Model implements AuthenticatableContract, CanResetPasswo
 	 * @var array
 	 */
     protected $guarded = array([]);
-
-	/**
-	 * The attributes excluded from the model's JSON form.
-	 *
-	 * @var array
-	 */
-	protected $hidden = ['password', 'remember_token'];
-
 }
