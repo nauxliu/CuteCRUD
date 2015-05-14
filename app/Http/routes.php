@@ -12,3 +12,8 @@
 */
 
 Route::get('/', 'WelcomeController@index');
+
+Route::group(['middleware' => ['register.view.variable']], function()
+{
+    Route::get('models', 'ModelsController@index');
+});
