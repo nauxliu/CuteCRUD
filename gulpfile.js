@@ -14,6 +14,10 @@ var elixir = require('laravel-elixir');
 elixir(function(mix) {
     mix.sass('app.scss', 'public/build/css/app.css')
         .scripts([
+            //jQuery
+            'jquery.js',
+
+            //Bootstrap
             'bootstrap/affix.js',
             'bootstrap/alert.js',
             'bootstrap/button.js',
@@ -26,5 +30,5 @@ elixir(function(mix) {
             'bootstrap/transition.js',
             'bootstrap/tooltip.js',
             'bootstrap/popover.js'
-        ], 'public/build/js/bootstrap.js', 'resources/assets/js')
+        ], 'public/build/js/app.js', 'resources/assets/js')
 });
