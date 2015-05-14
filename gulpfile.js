@@ -12,5 +12,19 @@ var elixir = require('laravel-elixir');
  */
 
 elixir(function(mix) {
-    mix.less('app.less');
+    mix.sass('app.scss', 'public/build/css/app.css')
+        .scripts([
+            'bootstrap/affix.js',
+            'bootstrap/alert.js',
+            'bootstrap/button.js',
+            'bootstrap/carousel.js',
+            'bootstrap/collapse.js',
+            'bootstrap/dropdown.js',
+            'bootstrap/modal.js',
+            'bootstrap/scrollspy.js',
+            'bootstrap/tab.js',
+            'bootstrap/transition.js',
+            'bootstrap/tooltip.js',
+            'bootstrap/popover.js'
+        ], 'public/build/js/bootstrap.js', 'resources/assets/js')
 });
