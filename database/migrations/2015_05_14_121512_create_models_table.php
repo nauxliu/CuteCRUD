@@ -21,8 +21,8 @@ class CreateModelsTable extends Migration {
 	{
         Schema::create($this->table_name, function(Blueprint $table){
             $table->increments('id');
-            $table->string('model_name', 10);
-            $table->string('table_name', 100);
+            $table->string('name', 10);
+            $table->string('table', 100);
             $table->string('creatable', 100);
             $table->string('editable', 100);
             $table->string('listable', 100);

@@ -6,7 +6,7 @@
             <a href="#">Models</a>
         </li>
         @foreach($models as $model)
-        <li><a href="#">{{$model->model_name}}</a></li>
+        <li><a href="#">{{$model->name}}</a></li>
         @endforeach
     </ul>
 </div>
