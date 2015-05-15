@@ -23,9 +23,10 @@ class CreateModelsTable extends Migration {
             $table->increments('id');
             $table->string('name', 10);
             $table->string('table', 100);
-            $table->string('creatable', 100);
-            $table->string('editable', 100);
-            $table->string('listable', 100);
+            $table->string('needle');
+            $table->enum('creatable', ['Yes', 'No']);
+            $table->enum('editable', ['Yes', 'No']);
+            $table->enum('listable', ['Yes', 'No']);
             $table->timestamps();
         });
 	}
