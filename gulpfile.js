@@ -35,5 +35,7 @@ elixir(function(mix) {
             'bootstrap-table/bootstrap-table.js',
             'bootstrap-table/bootstrap-table-zh-CN.js',
 
+            'methods.js'
+
         ], 'public/build/js/app.js', 'resources/assets/js')
 });
