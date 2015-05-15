@@ -17,3 +17,8 @@ Route::group(['middleware' => ['register.view.variable']], function()
 {
     Route::get('models', 'ModelsController@index');
 });
+
+Route::delete('models/{id}', [
+    'as'   => 'models.delete',
+    'uses' => 'ModelsController@destroy'
+]);

@@ -1,9 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
-
-use Illuminate\Http\Request;
+use App\Models\Model;
 
 class ModelsController extends Controller {
 
@@ -70,15 +68,19 @@ class ModelsController extends Controller {
 		//
 	}
 
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param Model $model
+     * @throws \Exception
+     */
 	public function destroy($id)
 	{
-		//
+        if (!$model = Model::find($id)) {
+            abort(404);
+        }
+
+        $model->delete();
 	}
 
 }

@@ -39,7 +39,9 @@
                 <td>{{ $model->created_at }}</td>
                 <td>
                     <button class="btn btn-warning btn-xs">编辑</button>
-                    <button class="btn btn-danger btn-xs">删除</button>
+                    <a href="{{ route('models.delete', $model->id) }}" class="deleteRow" data-method="delete" data-remote="true" data-confirm="你确定要删除吗？">
+                        <button class="btn btn-danger btn-xs">删除</button>
+                    </a>
                 </td>
             </tr>
         @endforeach
