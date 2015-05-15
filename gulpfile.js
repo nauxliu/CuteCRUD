@@ -14,10 +14,10 @@ var elixir = require('laravel-elixir');
 elixir(function(mix) {
     mix.rubySass('app.scss', 'public/build/css')
         .scripts([
-            //jQuery
+            // jQuery
             'jquery.js',
 
-            //Bootstrap
+            // Bootstrap
             'bootstrap/affix.js',
             'bootstrap/alert.js',
             'bootstrap/button.js',
@@ -29,6 +29,11 @@ elixir(function(mix) {
             'bootstrap/tab.js',
             'bootstrap/transition.js',
             'bootstrap/tooltip.js',
-            'bootstrap/popover.js'
+            'bootstrap/popover.js',
+
+            // Bootstrap-Table
+            'bootstrap-table/bootstrap-table.js',
+            'bootstrap-table/bootstrap-table-zh-CN.js',
+
         ], 'public/build/js/app.js', 'resources/assets/js')
 });
