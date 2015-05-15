@@ -32,13 +32,14 @@ elixir(function(mix) {
             'bootstrap/popover.js',
 
             // Bootstrap-Table
-            'bootstrap-table/bootstrap-table.js',
-            'bootstrap-table/bootstrap-table-zh-CN.js',
+            'plugins/bootstrap-table/bootstrap-table.js',
+            'plugins/bootstrap-table/bootstrap-table-zh-CN.js',
 
             // Some Help methods
             'methods.js',
 
-            // jQuery-ujs
+            // Plugins
+            'plugins/sweetalert.js',
             'plugins/jquery-ujs.js',
 
         ], 'public/build/js/app.js', 'resources/assets/js')
