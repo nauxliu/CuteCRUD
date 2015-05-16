@@ -22,7 +22,7 @@ class ModelsController extends Controller {
 	 */
 	public function create()
 	{
-		//
+		return view('models.create');
 	}
 
 	/**
@@ -71,8 +71,8 @@ class ModelsController extends Controller {
     /**
      * Remove the specified resource from storage.
      *
-     * @param Model $model
-     * @throws \Exception
+     * @param $id
+     * @internal param Model $model
      */
 	public function destroy($id)
 	{
